@@ -1,12 +1,11 @@
 package com.mansoor.blogbackend.models;
 
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.ToString;
 
-@ToString
 @Entity
 public class Post {
 
@@ -18,7 +17,22 @@ public class Post {
     private String content;
     private String author;
 
+    // Add the slug field
+    private String slug;
+
+    // Constructors
+    public Post() {
+    }
+
+    public Post(String title, String content, String author, String slug) {
+        this.title = title;
+        this.content = content;
+        this.author = author;
+        this.slug = slug;
+    }
+
     // Getters and setters for the fields
+
     public Long getId() {
         return id;
     }
@@ -49,5 +63,14 @@ public class Post {
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    // Getters and setters for slug
+    public String getSlug() {
+        return slug;
+    }
+
+    public void setSlug(String slug) {
+        this.slug = slug;
     }
 }

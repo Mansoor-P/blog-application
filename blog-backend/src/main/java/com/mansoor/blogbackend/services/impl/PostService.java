@@ -11,4 +11,5 @@ public interface PostService {
     Post createPost(Post post);
     Post updatePost(Long id, Post post);
     void deletePost(Long id);
+    String generateSlug(String title);
 }

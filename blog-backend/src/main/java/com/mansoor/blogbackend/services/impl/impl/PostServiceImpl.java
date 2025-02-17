@@ -27,6 +27,10 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Post createPost(Post post) {
+        // Generate a slug if not provided
+        if (post.getSlug() == null || post.getSlug().isEmpty()) {
+            post.setSlug(generateSlug(post.getTitle()));  // Generate slug using the title
+        }
         return postRepository.save(post);
     }
 
@@ -40,14 +44,25 @@ public class PostServiceImpl implements PostService {
             updatedPost.setContent(post.getContent());
             updatedPost.setAuthor(post.getAuthor());
 
+            // Generate a new slug if the title changes
+            if (post.getTitle() != null && !post.getTitle().equals(updatedPost.getTitle())) {
+                updatedPost.setSlug(generateSlug(post.getTitle()));
+            }
+
             return postRepository.save(updatedPost);
         }
         return null; // Or throw a custom exception if not found
     }
 
-
     @Override
     public void deletePost(Long id) {
         postRepository.deleteById(id);
+    }
+
+    @Override
+    public String generateSlug(String title) {
+        // Generate the slug based on the title
+        String slug = title.toLowerCase().replaceAll("[^a-z0-9 ]", "").replaceAll(" ", "-");
+        return slug;
     }
 }
