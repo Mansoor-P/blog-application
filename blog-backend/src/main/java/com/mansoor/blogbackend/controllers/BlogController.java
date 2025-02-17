@@ -1,60 +1,50 @@
 package com.mansoor.blogbackend.controllers;
 
-
-
 import com.mansoor.blogbackend.dto.BlogDTO;
-import com.mansoor.blogbackend.models.Blog;
 import com.mansoor.blogbackend.services.BlogService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/blogs")
+@RequestMapping("/api/blogs")
 public class BlogController {
 
     private final BlogService blogService;
 
-    @Autowired
     public BlogController(BlogService blogService) {
         this.blogService = blogService;
     }
 
     @PostMapping
-    public ResponseEntity<Blog> createBlog(@RequestBody BlogDTO blogDTO, @RequestHeader("userId") Long userId) {
-        Blog blog = blogService.createBlog(blogDTO, userId);
-        return ResponseEntity.ok(blog);
+    public ResponseEntity<BlogDTO> createBlog(@RequestBody BlogDTO blog) {
+        return ResponseEntity.ok(blogService.createBlog(blog));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Blog> updateBlog(@PathVariable Long id, @RequestBody BlogDTO blogDTO, @RequestHeader("userId") Long userId) {
-        Blog blog = blogService.updateBlog(id, blogDTO, userId);
-        return ResponseEntity.ok(blog);
+    public ResponseEntity<BlogDTO> updateBlog(@PathVariable Long id, @RequestBody BlogDTO blog) {
+        return ResponseEntity.ok(blogService.updateBlog(id, blog));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteBlog(@PathVariable Long id, @RequestHeader("userId") Long userId) {
-        blogService.deleteBlog(id, userId);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<String> deleteBlog(@PathVariable Long id) {
+        blogService.deleteBlog(id);
+        return ResponseEntity.ok("Blog deleted successfully");
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Blog> getBlogById(@PathVariable Long id) {
-        Blog blog = blogService.getBlogById(id);
-        return ResponseEntity.ok(blog);
+    public ResponseEntity<BlogDTO> getBlogById(@PathVariable Long id) {
+        return ResponseEntity.ok(blogService.getBlogById(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<Blog>> getAllBlogs() {
-        List<Blog> blogs = blogService.getAllBlogs();
-        return ResponseEntity.ok(blogs);
+    public ResponseEntity<List<BlogDTO>> getAllBlogs() {
+        return ResponseEntity.ok(blogService.getAllBlogs());
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Blog>> getBlogsByUser(@PathVariable Long userId) {
-        List<Blog> blogs = blogService.getBlogsByUser(userId);
-        return ResponseEntity.ok(blogs);
+    public ResponseEntity<List<BlogDTO>> getBlogsByUser(@PathVariable Long userId) {
+        return ResponseEntity.ok(blogService.getBlogsByUserId(userId));
     }
 }
