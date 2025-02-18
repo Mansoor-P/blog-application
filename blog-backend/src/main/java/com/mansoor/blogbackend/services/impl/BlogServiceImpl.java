@@ -2,43 +2,28 @@ package com.mansoor.blogbackend.services.impl;
 
 import com.mansoor.blogbackend.dto.BlogDTO;
 import com.mansoor.blogbackend.models.Blog;
-import com.mansoor.blogbackend.models.Tag;
-import com.mansoor.blogbackend.models.User;
 import com.mansoor.blogbackend.repositories.BlogRepository;
-import com.mansoor.blogbackend.repositories.TagRepository;
-import com.mansoor.blogbackend.repositories.UserRepository;
 import com.mansoor.blogbackend.services.BlogService;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 public class BlogServiceImpl implements BlogService {
 
     private final BlogRepository blogRepository;
-    private final UserRepository userRepository;
-    private final TagRepository tagRepository;
 
-    public BlogServiceImpl(BlogRepository blogRepository, UserRepository userRepository, TagRepository tagRepository) {
+    public BlogServiceImpl(BlogRepository blogRepository) {
         this.blogRepository = blogRepository;
-        this.userRepository = userRepository;
-        this.tagRepository = tagRepository;
     }
 
     @Override
     public BlogDTO createBlog(BlogDTO blogDTO) {
-        User user = userRepository.findById(blogDTO.getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
-
-        Blog blog = new Blog(blogDTO.getTitle(), blogDTO.getSummary(), blogDTO.getContent(), blogDTO.getAuthor(), user);
-
-        // Convert tag names to Tag entities
-        Set<Tag> tags = blogDTO.getTags().stream()
-                .map(tagName -> tagRepository.findByName(tagName).orElseGet(() -> new Tag(tagName)))
-                .collect(Collectors.toSet());
-
-        blog.setTags(tags);
+        Blog blog = new Blog(blogDTO.getTitle(), blogDTO.getSummary(), blogDTO.getContent(), blogDTO.getAuthor(), blogDTO.getUserId());
+        blog.setCreatedAt(new java.util.Date());
+        blog.setUpdatedAt(new java.util.Date());
         Blog savedBlog = blogRepository.save(blog);
         return convertToDTO(savedBlog);
     }
@@ -56,7 +41,7 @@ public class BlogServiceImpl implements BlogService {
             Blog updatedBlog = blogRepository.save(blog);
             return convertToDTO(updatedBlog);
         }
-        return null;
+        return null; // Return null if blog doesn't exist
     }
 
     @Override
@@ -86,11 +71,9 @@ public class BlogServiceImpl implements BlogService {
                 blog.getSummary(),
                 blog.getContent(),
                 blog.getAuthor(),
+                blog.getUserId(),
                 blog.getCreatedAt(),
-                blog.getUpdatedAt(),
-                blog.getUser().getId(),
-                blog.getTags().stream().map(Tag::getName).collect(Collectors.toSet()),
-                null // We will handle comments separately
+                blog.getUpdatedAt()
         );
     }
 }
