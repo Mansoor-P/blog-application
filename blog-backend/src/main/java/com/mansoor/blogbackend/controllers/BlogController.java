@@ -19,12 +19,18 @@ public class BlogController {
 
     @PostMapping
     public ResponseEntity<BlogDTO> createBlog(@RequestBody BlogDTO blog) {
-        return ResponseEntity.ok(blogService.createBlog(blog));
+        BlogDTO createdBlog = blogService.createBlog(blog);
+        return ResponseEntity.status(201).body(createdBlog); // Return 201 status for created resource
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<BlogDTO> updateBlog(@PathVariable Long id, @RequestBody BlogDTO blog) {
-        return ResponseEntity.ok(blogService.updateBlog(id, blog));
+        BlogDTO updatedBlog = blogService.updateBlog(id, blog);
+        if (updatedBlog != null) {
+            return ResponseEntity.ok(updatedBlog);
+        } else {
+            return ResponseEntity.status(404).body(null); // Return 404 if blog not found
+        }
     }
 
     @DeleteMapping("/{id}")
@@ -35,7 +41,12 @@ public class BlogController {
 
     @GetMapping("/{id}")
     public ResponseEntity<BlogDTO> getBlogById(@PathVariable Long id) {
-        return ResponseEntity.ok(blogService.getBlogById(id));
+        BlogDTO blog = blogService.getBlogById(id);
+        if (blog != null) {
+            return ResponseEntity.ok(blog);
+        } else {
+            return ResponseEntity.status(404).body(null); // Return 404 if blog not found
+        }
     }
 
     @GetMapping

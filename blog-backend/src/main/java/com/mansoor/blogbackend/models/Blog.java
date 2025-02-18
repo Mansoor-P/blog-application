@@ -2,8 +2,6 @@ package com.mansoor.blogbackend.models;
 
 import jakarta.persistence.*;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 public class Blog {
@@ -16,33 +14,33 @@ public class Blog {
     private String summary;
     private String content;
     private String author;
+    private Long userId; // Added userId to the entity
     private Date createdAt;
     private Date updatedAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    // Default Constructor
+    public Blog() {}
 
-    @ManyToMany
-    @JoinTable(
-            name = "blog_tags",
-            joinColumns = @JoinColumn(name = "blog_id"),
-            inverseJoinColumns = @JoinColumn(name = "tag_id")
-    )
-    private Set<Tag> tags = new HashSet<>();
-
-    // Constructors, getters, and setters
-    public Blog() {
-    }
-
-    public Blog(String title, String summary, String content, String author, User user) {
+    // Constructor with all fields
+    public Blog(String title, String summary, String content, String author, Long userId) {
         this.title = title;
         this.summary = summary;
         this.content = content;
         this.author = author;
-        this.user = user;
+        this.userId = userId;
         this.createdAt = new Date();
         this.updatedAt = new Date();
+    }
+
+    public Blog(Long id, String title, String summary, String content, String author, Long userId, Date createdAt, Date updatedAt) {
+        this.id = id;
+        this.title = title;
+        this.summary = summary;
+        this.content = content;
+        this.author = author;
+        this.userId = userId;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     // Getters and Setters
@@ -86,6 +84,14 @@ public class Blog {
         this.author = author;
     }
 
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
     public Date getCreatedAt() {
         return createdAt;
     }
@@ -100,21 +106,5 @@ public class Blog {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Set<Tag> getTags() {
-        return tags;
-    }
-
-    public void setTags(Set<Tag> tags) {
-        this.tags = tags;
     }
 }
