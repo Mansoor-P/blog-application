@@ -19,6 +19,25 @@ public class BlogServiceImpl implements BlogService {
         this.blogRepository = blogRepository;
     }
 
+    // Retrieve a blog by ID
+    @Override
+    public BlogDTO getBlogById(Long id) {
+        return blogRepository.findById(id).map(this::convertToDTO).orElse(null);
+    }
+
+    // Retrieve all blogs
+    @Override
+    public List<BlogDTO> getAllBlogs() {
+        return blogRepository.findAll().stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
+
+    // Retrieve blogs by user ID
+    @Override
+    public List<BlogDTO> getBlogsByUserId(Long userId) {
+        return blogRepository.findByUserId(userId).stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
+
+    // Create a new blog
     @Override
     public BlogDTO createBlog(BlogDTO blogDTO) {
         Blog blog = new Blog(blogDTO.getTitle(), blogDTO.getSummary(), blogDTO.getContent(), blogDTO.getAuthor(), blogDTO.getUserId());
@@ -28,6 +47,7 @@ public class BlogServiceImpl implements BlogService {
         return convertToDTO(savedBlog);
     }
 
+    // Update an existing blog
     @Override
     public BlogDTO updateBlog(Long id, BlogDTO blogDTO) {
         Optional<Blog> existingBlog = blogRepository.findById(id);
@@ -44,26 +64,13 @@ public class BlogServiceImpl implements BlogService {
         return null; // Return null if blog doesn't exist
     }
 
+    // Delete a blog by ID
     @Override
     public void deleteBlog(Long id) {
         blogRepository.deleteById(id);
     }
 
-    @Override
-    public BlogDTO getBlogById(Long id) {
-        return blogRepository.findById(id).map(this::convertToDTO).orElse(null);
-    }
-
-    @Override
-    public List<BlogDTO> getAllBlogs() {
-        return blogRepository.findAll().stream().map(this::convertToDTO).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<BlogDTO> getBlogsByUserId(Long userId) {
-        return blogRepository.findByUserId(userId).stream().map(this::convertToDTO).collect(Collectors.toList());
-    }
-
+    // Convert Blog entity to BlogDTO
     private BlogDTO convertToDTO(Blog blog) {
         return new BlogDTO(
                 blog.getId(),
