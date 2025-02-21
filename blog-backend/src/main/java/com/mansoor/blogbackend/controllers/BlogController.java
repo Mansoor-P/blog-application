@@ -1,6 +1,5 @@
 package com.mansoor.blogbackend.controllers;
 
-import com.mansoor.blogbackend.BlogBackendApplication;
 import com.mansoor.blogbackend.dto.BlogDTO;
 import com.mansoor.blogbackend.services.BlogService;
 import io.swagger.v3.oas.annotations.Operation;
