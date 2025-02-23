@@ -1,6 +1,3 @@
-/* src/styles/LandingPage.module.css */
-
-/* Import Playfair Display font */
 @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&display=swap");
 
 /* Page Layout */
@@ -8,9 +5,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 5rem 10%;
-  background-color: #f9f9f9;
-  min-height: 100vh;
+  padding: 1rem 10%;
+  background-color: #dfe2a12d;
+  min-height: 75vh;
 }
 
 /* Text Section */
@@ -21,9 +18,9 @@
 
 .title {
   font-family: "Playfair Display", serif;
-  font-size: 3.5rem;
+  font-size: 4.5rem;
   font-weight: 700;
-  color: #333;
+  color: #272727;
   margin-bottom: 0.5rem;
 }
 
@@ -31,34 +28,34 @@
   font-family: "Playfair Display", serif;
   font-size: 2rem;
   font-weight: 500;
-  color: #555;
+  color: #323232;
   margin-bottom: 1rem;
 }
 
 .description {
   font-family: "Playfair Display", serif;
   font-size: 1.25rem;
-  color: #777;
+  color: #474646;
   line-height: 1.6;
   max-width: 500px;
   margin-bottom: 2rem;
 }
 
 .readButton {
-  background-color: black;
+  background-color: rgb(26, 120, 31);
   color: white;
   font-size: 1.125rem;
   padding: 0.75rem 1.5rem;
   border: none;
-  border-radius: 5px;
-  font-family: "Playfair Display", serif;
+  border-radius: 50px;
+  font-family: sans-serif;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease-in-out;
 }
 
 .readButton:hover {
-  background-color: #444;
+  background-color: rgba(26, 120, 31, 0.827);
 }
 
 /* Image Section */
@@ -79,12 +76,12 @@
 @media (max-width: 768px) {
   .container {
     flex-direction: column;
-    text-align: center;
-    padding: 3rem 5%;
+    text-align: start;
   }
-
   .textContent {
     max-width: 100%;
+    margin-top: 100px;
+
   }
   .imageContainer{
     display: none;
