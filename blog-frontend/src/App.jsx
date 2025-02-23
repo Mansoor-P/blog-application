@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import Home from "./pages/Home";
+import LandingPage from "./pages/LandingPage";
 import BlogsPage from "./pages/BlogsPage";
 import AboutPage from "./pages/AboutPage";
 import NotFound from "./pages/Notfound";
@@ -11,11 +11,11 @@ const App = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-
+      <hr />
       {/* Main content section */}
-      <main className="flex-grow bg-gray-100 px-4 sm:px-6 lg:px-8 py-8">
+      <main className="flex-grow">
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<LandingPage />} />
           <Route path="/blogs" element={<BlogsPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="*" element={<NotFound />} />

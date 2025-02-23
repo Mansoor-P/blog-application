@@ -10,27 +10,37 @@ const Footer = () => {
           <ul className="flex flex-wrap md:flex-nowrap space-x-6 md:space-x-8 mb-4 md:mb-0">
             <li>
               <a href="#" className="hover:underline">
-                About
+                Git Hub
+              </a>
+            </li>{" "}
+            <li>
+              <a href="#" className="hover:underline">
+                LinkedIn
               </a>
             </li>
           </ul>
-        </div>
-
-        <div className="md:w-1/3 text-center mb-4 md:mb-0">
-          <h2 className="font-bold text-2xl mb-2">MANSOOR</h2>
         </div>
 
         <div className="md:w-1/3 text-right">
           <ul className="flex space-x-6 md:space-x-8">
             <li>
               <a href="#" className="hover:underline">
-                Git Hub
+                About
               </a>
             </li>
-
             <li>
               <a href="#" className="hover:underline">
-                LinkedIn
+                Help
+              </a>
+            </li>
+            <li>
+              <a href="#" className="hover:underline">
+                Terms
+              </a>
+            </li>
+            <li>
+              <a href="#" className="hover:underline">
+                Privacy
               </a>
             </li>
           </ul>

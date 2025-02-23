@@ -1,0 +1,92 @@
+/* src/styles/LandingPage.module.css */
+
+/* Import Playfair Display font */
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&display=swap");
+
+/* Page Layout */
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5rem 10%;
+  background-color: #f9f9f9;
+  min-height: 100vh;
+}
+
+/* Text Section */
+.textContent {
+  flex: 1;
+  max-width: 50%;
+}
+
+.title {
+  font-family: "Playfair Display", serif;
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  font-family: "Playfair Display", serif;
+  font-size: 2rem;
+  font-weight: 500;
+  color: #555;
+  margin-bottom: 1rem;
+}
+
+.description {
+  font-family: "Playfair Display", serif;
+  font-size: 1.25rem;
+  color: #777;
+  line-height: 1.6;
+  max-width: 500px;
+  margin-bottom: 2rem;
+}
+
+.readButton {
+  background-color: black;
+  color: white;
+  font-size: 1.125rem;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 5px;
+  font-family: "Playfair Display", serif;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.readButton:hover {
+  background-color: #444;
+}
+
+/* Image Section */
+.imageContainer {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image {
+  width: 100%;
+  max-width: 500px;
+  border-radius: 10px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    text-align: center;
+    padding: 3rem 5%;
+  }
+
+  .textContent {
+    max-width: 100%;
+  }
+  .imageContainer{
+    display: none;
+  }
+}
