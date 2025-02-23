@@ -8,7 +8,7 @@ const Navbar = () => {
       <div className="flex justify-between items-center max-w-screen-xl mx-auto">
         {/* Logo */}
         <Link to="/" className={styles.logo}>
-          MANSOOR
+          Blogging
         </Link>
         {/* Desktop Menu */}
         <div className={styles.navLinks}>
@@ -17,6 +17,12 @@ const Navbar = () => {
           </Link>
           <Link to="/blogs" className={styles.navItem}>
             Blogs
+          </Link>
+          <Link to="/login" className={styles.navItem}>
+            Sign in
+          </Link>
+          <Link to="/register" className={styles.getStarted}>
+            Get started
           </Link>
         </div>
       </div>
