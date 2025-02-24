@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -9,12 +10,12 @@ const Footer = () => {
         <div className="md:w-1/3 text-left">
           <ul className="flex flex-wrap md:flex-nowrap space-x-6 md:space-x-8 mb-4 md:mb-0">
             <li>
-              <a href="#" className="hover:underline">
+              <a href="https://github.com/Mansoor-P" className="hover:underline">
                 Git Hub
               </a>
             </li>{" "}
             <li>
-              <a href="#" className="hover:underline">
+              <a href="https://github.com/mansoor0731" className="hover:underline">
                 LinkedIn
               </a>
             </li>
@@ -23,23 +24,21 @@ const Footer = () => {
 
         <div className="md:w-1/3 text-right">
           <ul className="flex space-x-6 md:space-x-8">
+            <Link to={"/about"}>
+            About
+            </Link>
             <li>
-              <a href="#" className="hover:underline">
-                About
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:underline">
+              <a href="/help" className="hover:underline">
                 Help
               </a>
             </li>
             <li>
-              <a href="#" className="hover:underline">
+              <a href="/terms-conditions" className="hover:underline">
                 Terms
               </a>
             </li>
             <li>
-              <a href="#" className="hover:underline">
+              <a href="/privacy-policy" className="hover:underline">
                 Privacy
               </a>
             </li>

@@ -1,11 +1,11 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import LandingPage from "./pages/LandingPage";
+import Home from "./pages/Home";
 import BlogsPage from "./pages/BlogsPage";
 import AboutPage from "./pages/AboutPage";
 import NotFound from "./pages/Notfound";
-import Navbar from "./components/Navbar/Navbar";
-import Footer from "./components/Footer/Footer";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 
 const App = () => {
   return (
@@ -15,13 +15,12 @@ const App = () => {
       {/* Main content section */}
       <main className="flex-grow">
         <Routes>
-          <Route path="/" element={<LandingPage />} />
+          <Route path="/" element={<Home />} />
           <Route path="/blogs" element={<BlogsPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
-
       {/* Footer */}
       <Footer />
     </div>

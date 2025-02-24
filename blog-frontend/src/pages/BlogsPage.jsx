@@ -1,8 +1,8 @@
 import React, { useEffect, useReducer } from "react";
 import { fetchBlogs } from "../services/api";
-import LeftColumn from "../components/blogs/LeftColumn";
-import MiddleColumn from "../components/blogs/MiddleColumn";
-import RightColumn from "../components/blogs/RightColumn";
+import LeftColumn from "./blogs/LeftColumn";
+import MiddleColumn from "./blogs/MiddleColumn";
+import RightColumn from "./blogs/RightColumn";
 
 // Initial state for the reducer
 const initialState = {
@@ -62,7 +62,6 @@ const BlogsPage = () => {
         <MiddleColumn blogs={state.blogs} />
         <RightColumn blogs={state.blogs} />
       </div>
-
     </div>
   );
 };
