@@ -1,17 +1,29 @@
 import React from "react";
-import Hero from "../components/landing/hero";
-import Features from "../components/landing/Features";
-import Testimonials from "../components/landing/Testimonials";
-
-import Marquee from "../assets/Marquee";
+import styles from "../styles/LandingPage.module.css";
 
 const Home = () => {
   return (
-    <div className="font-sans bg-gray-100">
-      <Hero />
-      <Marquee />
-      <Features />
-      <Testimonials />
+    <div className={styles.container}>
+      {/* Left Side - Text Content */}
+      <div className={styles.textContent}>
+        <h1 className={styles.title}>Tech & Engineering</h1>
+        <h2 className={styles.subtitle}>Stories & Ideas</h2>
+        <p className={styles.description}>
+          A place to read, write, and deepen your understanding
+        </p>
+        <button className={styles.readButton} >
+          Start Reading
+        </button>
+      </div>
+
+      {/* Right Side - Image */}
+      <div className={styles.imageContainer}>
+        <img
+          src="https://miro.medium.com/v2/format:webp/4*SdjkdS98aKH76I8eD0_qjw.png"
+          alt="Tech Illustration"
+          className={styles.image}
+        />
+      </div>
     </div>
   );
 };
