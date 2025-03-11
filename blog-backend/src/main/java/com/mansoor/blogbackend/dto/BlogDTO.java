@@ -1,22 +1,24 @@
 package com.mansoor.blogbackend.dto;
 
+import lombok.*;
+
 import java.util.Date;
 
-public class BlogDTO {
 
+public class BlogDTO {
     private Long id;
     private String title;
     private String summary;
     private String content;
     private String author;
-    private Long userId; // Added userId to DTO
+    private Long userId;
     private Date createdAt;
     private Date updatedAt;
 
-    // Default Constructor
-    public BlogDTO() {}
 
-    // Constructor with all fields
+    public BlogDTO() {
+    }
+
     public BlogDTO(Long id, String title, String summary, String content, String author, Long userId, Date createdAt, Date updatedAt) {
         this.id = id;
         this.title = title;
@@ -28,7 +30,6 @@ public class BlogDTO {
         this.updatedAt = updatedAt;
     }
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }

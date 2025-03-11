@@ -1,9 +1,12 @@
 package com.mansoor.blogbackend.models;
 
 import jakarta.persistence.*;
+import lombok.*;
+
 import java.util.Date;
 
 @Entity
+@Table(name = "blogs")
 public class Blog {
 
     @Id
@@ -12,24 +15,18 @@ public class Blog {
 
     private String title;
     private String summary;
+    @Column(columnDefinition = "TEXT")
     private String content;
     private String author;
-    private Long userId; // Added userId to the entity
+    private Long userId;
+
+    @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
+
+    @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
 
-    // Default Constructor
-    public Blog() {}
-
-    // Constructor with all fields
-    public Blog(String title, String summary, String content, String author, Long userId) {
-        this.title = title;
-        this.summary = summary;
-        this.content = content;
-        this.author = author;
-        this.userId = userId;
-        this.createdAt = new Date();
-        this.updatedAt = new Date();
+    public Blog() {
     }
 
     public Blog(Long id, String title, String summary, String content, String author, Long userId, Date createdAt, Date updatedAt) {
@@ -43,7 +40,6 @@ public class Blog {
         this.updatedAt = updatedAt;
     }
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }
