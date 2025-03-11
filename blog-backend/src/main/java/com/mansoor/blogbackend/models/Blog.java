@@ -1,54 +1,32 @@
 package com.mansoor.blogbackend.models;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
+
 import java.util.Date;
 
 @Entity
-@Data
-@Builder
-@NoArgsConstructor // Optional: Allows easy object creation using Builder pattern
+@Table(name = "blogs")
 public class Blog {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 255)
     private String title;
-
-    @Column(length = 500) // Summary can have a max length
     private String summary;
-
-    @Column(columnDefinition = "TEXT") // Stores large text content
+    @Column(columnDefinition = "TEXT")
     private String content;
-
-    @Column(nullable = false)
     private String author;
-
-    private Long userId; // Can be replaced with @ManyToOne User entity
+    private Long userId;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(updatable = false) // Prevent manual updates
     private Date createdAt;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
 
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = new Date();
-        this.updatedAt = new Date();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = new Date();
-    }
-
-    public Blog(@NotBlank(message = "Title is required") String title, @NotBlank(message = "Summary is required") String summary, @NotBlank(message = "Content cannot be empty") String content, @NotBlank(message = "Author is required") String author, @NotNull(message = "User ID is required") Long userId) {
+    public Blog() {
     }
 
     public Blog(Long id, String title, String summary, String content, String author, Long userId, Date createdAt, Date updatedAt) {
