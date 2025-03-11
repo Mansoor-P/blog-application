@@ -11,7 +11,9 @@ const Home = () => {
         <p className={styles.description}>
           A place to read, write, and deepen your understanding
         </p>
-        <button className={styles.readButton}>Start Reading</button>
+        <button className={styles.readButton} >
+          Start Reading
+        </button>
       </div>
 
       {/* Right Side - Image */}

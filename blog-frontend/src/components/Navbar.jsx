@@ -3,6 +3,10 @@ import { Link } from "react-router-dom";
 import styles from "../styles/Navbar.module.css";
 
 const Navbar = () => {
+  const handleSignInClick = (event) => {
+    event.preventDefault(); // Prevents immediate navigation
+    alert("Sign-in Funtionality to be implemented!");
+  };
   return (
     <nav className={styles.navbar}>
       <div className="flex justify-between items-center max-w-screen-xl mx-auto">
@@ -18,10 +22,14 @@ const Navbar = () => {
           <Link to="/blogs" className={styles.navItem}>
             Blogs
           </Link>
-          <Link to="/login" className={styles.navItem}>
+          <Link
+            to="/login"
+            className={styles.navItem}
+            onClick={handleSignInClick}
+          >
             Sign in
           </Link>
-          <Link to="/register" className={styles.getStarted}>
+          <Link to="/blogs" className={styles.getStarted}>
             Get started
           </Link>
         </div>
