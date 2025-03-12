@@ -1,38 +1,59 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import styles from "../styles/Navbar.module.css";
+import { Link, useNavigate } from "react-router-dom";
+import { logoutUser } from "../services/auth";
 
 const Navbar = () => {
-  const handleSignInClick = (event) => {
-    event.preventDefault(); // Prevents immediate navigation
-    alert("Sign-in Funtionality to be implemented!");
+  const navigate = useNavigate();
+
+  const getUser = () => {
+    try {
+      const userData = localStorage.getItem("user");
+      return userData ? JSON.parse(userData) : null;
+    } catch (error) {
+      console.error("Error parsing user data:", error);
+      return null;
+    }
   };
+
+  const user = getUser();
+
+  const handleLogout = () => {
+    logoutUser();
+    navigate("/login");
+  };
+
   return (
-    <nav className={styles.navbar}>
-      <div className="flex justify-between items-center max-w-screen-xl mx-auto">
-        {/* Logo */}
-        <Link to="/" className={styles.logo}>
-          Blogging
-        </Link>
-        {/* Desktop Menu */}
-        <div className={styles.navLinks}>
-          <Link to="/" className={styles.navItem}>
-            Home
-          </Link>
-          <Link to="/blogs" className={styles.navItem}>
-            Blogs
-          </Link>
-          <Link
-            to="/login"
-            className={styles.navItem}
-            onClick={handleSignInClick}
-          >
-            Sign in
-          </Link>
-          <Link to="/blogs" className={styles.getStarted}>
-            Get started
-          </Link>
-        </div>
+    <nav className="bg-gray-800 p-4 text-white flex justify-between">
+      <Link to="/" className="font-bold text-lg">
+        Blogging
+      </Link>
+      <div className="space-x-4">
+        <Link to="/blogs">Blogs</Link>
+        {user ? (
+          <>
+            <Link
+              to={user.role === "ADMIN" ? "/admin" : `/user/${user.username}`}
+              className="text-yellow-300"
+            >
+              {user.fullName} ({user.role})
+            </Link>
+            <button
+              onClick={handleLogout}
+              className="bg-red-500 px-3 py-1 rounded"
+            >
+              Logout
+            </button>
+          </>
+        ) : (
+          <>
+            <Link to="/login" className="bg-blue-500 px-3 py-1 rounded">
+              Login
+            </Link>
+            <Link to="/register" className="bg-green-500 px-3 py-1 rounded">
+              Register
+            </Link>
+          </>
+        )}
       </div>
     </nav>
   );
