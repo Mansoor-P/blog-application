@@ -1,18 +1,19 @@
 package com.mansoor.blogbackend.services.impl;
 
-import com.mansoor.blogbackend.BlogBackendApplication;
 import com.mansoor.blogbackend.dto.BlogDTO;
 import com.mansoor.blogbackend.exceptions.BlogNotFoundException;
 import com.mansoor.blogbackend.models.Blog;
 import com.mansoor.blogbackend.repositories.BlogRepository;
 import com.mansoor.blogbackend.services.BlogService;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,7 +22,6 @@ import java.util.stream.Collectors;
 public class BlogServiceImpl implements BlogService {
 
     private final BlogRepository blogRepository;
-    private static final Logger log = LoggerFactory.getLogger(BlogServiceImpl.class);
 
     public BlogServiceImpl(BlogRepository blogRepository) {
         this.blogRepository = blogRepository;
@@ -65,23 +65,26 @@ public class BlogServiceImpl implements BlogService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     @Override
     public BlogDTO createBlog(BlogDTO blogDTO) {
         log.info("Creating a new blog with title: {}", blogDTO.getTitle());
-        Blog blog = new Blog(
-                null,
-                blogDTO.getTitle(),
-                blogDTO.getSummary(),
-                blogDTO.getContent(),
-                blogDTO.getAuthor(),
-                blogDTO.getUserId(),
-                new java.util.Date(),
-                new java.util.Date()
-        );
+        Blog blog = new Blog();
+        blog.setTitle(blogDTO.getTitle());
+        blog.setSummary(blogDTO.getSummary());
+        blog.setContent(blogDTO.getContent());
+        blog.setAuthor(blogDTO.getAuthor());
+        blog.setUserId(blogDTO.getUserId());
+
+        // Fix: Convert Instant to LocalDateTime properly
+        blog.setCreatedAt(LocalDateTime.ofInstant(Instant.now(), ZoneId.systemDefault()));
+        blog.setUpdatedAt(LocalDateTime.ofInstant(Instant.now(), ZoneId.systemDefault()));
+
         Blog savedBlog = blogRepository.save(blog);
         return convertToDTO(savedBlog);
     }
 
+    @Transactional
     @Override
     public BlogDTO updateBlog(Long id, BlogDTO blogDTO) {
         log.info("Updating blog with ID: {}", id);
@@ -91,12 +94,15 @@ public class BlogServiceImpl implements BlogService {
         blog.setTitle(blogDTO.getTitle());
         blog.setSummary(blogDTO.getSummary());
         blog.setContent(blogDTO.getContent());
-        blog.setUpdatedAt(new java.util.Date());
+
+        // Fix: Convert Instant to LocalDateTime properly
+        blog.setUpdatedAt(LocalDateTime.ofInstant(Instant.now(), ZoneId.systemDefault()));
 
         Blog updatedBlog = blogRepository.save(blog);
         return convertToDTO(updatedBlog);
     }
 
+    @Transactional
     @Override
     public void deleteBlog(Long id) {
         log.info("Deleting blog with ID: {}", id);
