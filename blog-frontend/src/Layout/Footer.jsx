@@ -1,63 +1,47 @@
 import React from "react";
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-black text-white py-8 px-4 md:px-8 lg:px-12">
-      <div className="container mx-auto flex flex-col md:flex-row items-center justify-between">
-        <div>
-          <ul className="flex space-x-6">
-            <li>
-              <a
-                href="https://github.com/Mansoor-P"
-                className="hover:underline"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a
-                href="https://linkedin.com/in/your-linkedin-profile"
-                className="hover:underline"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                LinkedIn
-              </a>
-            </li>
-          </ul>
+    <footer className="bg-black text-white py-6 px-4">
+      <div className="container mx-auto flex flex-col md:flex-row items-center justify-between text-sm">
+        {/* Social Links */}
+        <div className="flex space-x-6">
+          <a
+            href="https://github.com/Mansoor-P"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-gray-400"
+          >
+            GitHub
+          </a>
+          <a
+            href="https://linkedin.com/in/your-linkedin-profile"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-gray-400"
+          >
+            LinkedIn
+          </a>
         </div>
 
-        <div>
-          <ul className="flex space-x-6">
-            <li>
-              <NavLink to="/about" className="hover:underline">
-                About
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to="/help" className="hover:underline">
-                Help
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to="/terms-conditions" className="hover:underline">
-                Terms
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to="/privacy-policy" className="hover:underline">
-                Privacy
-              </NavLink>
-            </li>
-          </ul>
-        </div>
+        {/* Navigation Links */}
+        <nav className="flex space-x-4 mt-4 md:mt-0">
+          {["About", "Help", "Terms", "Privacy", "Contact"].map((item) => (
+            <NavLink
+              key={item}
+              to={`/${item.toLowerCase().replace(" ", "-")}`}
+              className="hover:text-gray-400"
+            >
+              {item}
+            </NavLink>
+          ))}
+        </nav>
 
-        <p className="text-gray-400 text-sm">
+        {/* Copyright */}
+        <p className="text-gray-400 mt-4 md:mt-0">
           &copy; {currentYear} Blogging Platform
         </p>
       </div>

@@ -13,13 +13,15 @@ export const registerUser = async (userData) => {
 export const loginUser = async (credentials) => {
   try {
     const response = await axios.post(AUTH_API.LOGIN, credentials);
-    console.log("Login Response:", response.data);
+    console.log("Full Login Response:", response);
+
+    console.log("Login Response Data:", response.data);
 
     if (response.data && response.data.id) {
-      // Ensure response has user details
-      localStorage.setItem("user", JSON.stringify(response.data)); // Store user data
+      localStorage.setItem("user", JSON.stringify(response.data));
       return response.data;
     } else {
+      console.error("Unexpected Response Format:", response.data);
       throw new Error("Invalid response format");
     }
   } catch (error) {

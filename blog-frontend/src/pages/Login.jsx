@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { loginUser } from "../services/authService";
-import { useNavigate, Link } from "react-router-dom";
-import FormInput from "../components/FormInput";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [credentials, setCredentials] = useState({ email: "", password: "" });
@@ -22,12 +21,19 @@ const Login = () => {
     setError("");
     try {
       const userData = await loginUser(credentials);
+      console.log("Logged in user:", userData);
+
       if (userData) {
-        navigate(userData.role === "ADMIN" ? "/admin" : `/user/${userData.username}`);
+        if (userData.role === "ADMIN") {
+          navigate("/admin"); // Redirect admins
+        } else {
+          navigate(`/user/${userData.username}`); // Redirect users
+        }
       } else {
         setError("Invalid email or password.");
       }
     } catch (err) {
+      console.error("Login Error:", err);
       setError(err.message || "Login failed.");
     }
   };
@@ -38,20 +44,22 @@ const Login = () => {
         <h2 className="text-2xl font-bold text-center mb-4">Login</h2>
         {error && <p className="text-red-500 text-sm text-center">{error}</p>}
         <form onSubmit={handleSubmit} className="space-y-4">
-          <FormInput
+          <input
             type="email"
             name="email"
+            placeholder="Email"
             value={credentials.email}
             onChange={handleChange}
-            placeholder="Email"
+            className="w-full p-2 border rounded"
             required
           />
-          <FormInput
+          <input
             type="password"
             name="password"
+            placeholder="Password"
             value={credentials.password}
             onChange={handleChange}
-            placeholder="Password"
+            className="w-full p-2 border rounded"
             required
           />
           <button
@@ -64,9 +72,9 @@ const Login = () => {
         <div className="mt-4 text-center">
           <p>
             If you haven't registered yet?{" "}
-            <Link to="/register" className="text-blue-500 hover:text-blue-700">
+            <a href="/register" className="text-blue-500 hover:text-blue-700">
               Sign Up
-            </Link>
+            </a>
           </p>
         </div>
       </div>

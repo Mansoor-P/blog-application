@@ -13,7 +13,12 @@ import EditProfile from "../features/profiles/EditProfile/EditProfile";
 import UserBlogs from "../features/profiles/UserProfile/UserBlogs";
 import ChangePassword from "../features/profiles/EditProfile/ChangePassword";
 import NotFound from "../pages/Notfound";
-import ProtectedRoute from "../routes/ProtectedRoute"; // Fixed path
+import ProtectedRoute from "../routes/ProtectedRoute";
+
+import Contact from "../pages/Contact";
+import Terms from "../pages/legal/Terms";
+import Privacy from "../pages/legal/Privacy";
+import Help from "../pages/legal/Help";
 
 const AppRoutes = () => {
   return (
@@ -25,12 +30,12 @@ const AppRoutes = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* Protected Routes */}
+        {/* Protected Routes with user data */}
         <Route
           path="/user/:username"
           element={
             <ProtectedRoute>
-              <UserProfile />
+              {(user) => <UserProfile user={user} />}
             </ProtectedRoute>
           }
         />
@@ -38,7 +43,7 @@ const AppRoutes = () => {
           path="/admin"
           element={
             <ProtectedRoute role="ADMIN">
-              <AdminProfile />
+              {(user) => <AdminProfile user={user} />}
             </ProtectedRoute>
           }
         />
@@ -46,7 +51,7 @@ const AppRoutes = () => {
           path="/user/:username/post-blog"
           element={
             <ProtectedRoute>
-              <BlogPost />
+              {(user) => <BlogPost user={user} />}
             </ProtectedRoute>
           }
         />
@@ -54,7 +59,7 @@ const AppRoutes = () => {
           path="/user/:username/edit-profile"
           element={
             <ProtectedRoute>
-              <EditProfile />
+              {(user) => <EditProfile user={user} />}
             </ProtectedRoute>
           }
         />
@@ -62,7 +67,7 @@ const AppRoutes = () => {
           path="/user/:username/my-blogs"
           element={
             <ProtectedRoute>
-              <UserBlogs />
+              {(user) => <UserBlogs user={user} />}
             </ProtectedRoute>
           }
         />
@@ -70,10 +75,15 @@ const AppRoutes = () => {
           path="/user/:username/change-password"
           element={
             <ProtectedRoute>
-              <ChangePassword />
+              {(user) => <ChangePassword user={user} />}
             </ProtectedRoute>
           }
         />
+
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/terms" element={<Terms />} />
+        <Route path="/privacy" element={<Privacy />} />
+        <Route path="/help" element={<Help />} />
 
         <Route path="*" element={<NotFound />} />
       </Route>

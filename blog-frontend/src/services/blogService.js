@@ -81,12 +81,16 @@ export const deleteBlog = async (id) => {
   }
 };
 
-// Fetch blogs by user
-export const fetchBlogsByUser = async (userId) => {
+// Fetch blogs by user ID
+export const fetchUserBlogs = async (userId) => {
   try {
-    const response = await api.get(BLOG_API.GET_BLOGS_BY_USER(userId));
-    return response.data;
+    const response = await fetch(`/api/blogs/user/${userId}`);
+    if (!response.ok) throw new Error("Failed to fetch blogs");
+    const data = await response.json();
+    console.log("Fetched blogs:", data); // Debugging
+    return data;
   } catch (error) {
-    handleApiError(error, "Error fetching blogs by user");
+    console.error("Error fetching blogs:", error);
+    throw error;
   }
 };

@@ -4,7 +4,8 @@ import { Navigate } from "react-router-dom";
 const ProtectedRoute = ({ children, role }) => {
   const user = JSON.parse(localStorage.getItem("user"));
 
-  if (!user) {
+  if (!user || !user.id) {
+    console.error("No user ID found. Please log in.");
     return <Navigate to="/login" replace />;
   }
 
@@ -12,7 +13,8 @@ const ProtectedRoute = ({ children, role }) => {
     return <Navigate to="/" replace />;
   }
 
-  return children;
+  // ✅ Pass user object if child is a function
+  return typeof children === "function" ? children(user) : children;
 };
 
 export default ProtectedRoute;

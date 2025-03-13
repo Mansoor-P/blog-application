@@ -37,9 +37,9 @@ const BlogsPage = () => {
     <div className="flex flex-col min-h-screen">
       {/* Main Content */}
       <div className="flex flex-col lg:flex-row flex-grow justify-center mt-20 p-6 gap-6">
-        <LeftColumn blogs={state.blogs} />
+        {/* <LeftColumn blogs={state.blogs} /> */}
         <MiddleColumn blogs={state.blogs} />
-        <RightColumn blogs={state.blogs} />
+        {/* <RightColumn blogs={state.blogs} /> */}
       </div>
     </div>
   );
