@@ -15,7 +15,8 @@ export const loginUser = async (credentials) => {
     const response = await axios.post(AUTH_API.LOGIN, credentials);
     console.log("Login Response:", response.data);
 
-    if (response.data && response.data.id) { // Ensure response has user details
+    if (response.data && response.data.id) {
+      // Ensure response has user details
       localStorage.setItem("user", JSON.stringify(response.data)); // Store user data
       return response.data;
     } else {
@@ -26,7 +27,6 @@ export const loginUser = async (credentials) => {
     throw new Error(error.response?.data?.message || "Login failed");
   }
 };
-
 
 export const logoutUser = () => {
   localStorage.removeItem("user");

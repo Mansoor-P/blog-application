@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { loginUser } from "../../services/auth";
-import { useNavigate } from "react-router-dom";
+import { loginUser } from "../services/authService";
+import { useNavigate, Link } from "react-router-dom";
+import FormInput from "../components/FormInput";
 
 const Login = () => {
   const [credentials, setCredentials] = useState({ email: "", password: "" });
@@ -17,27 +18,19 @@ const Login = () => {
       setError("Please enter both email and password.");
       return;
     }
-  
+
     setError("");
     try {
       const userData = await loginUser(credentials);
-      console.log("Logged in user:", userData);
-  
       if (userData) {
-        if (userData.role === "ADMIN") {
-          navigate("/admin");  // Redirect admins
-        } else {
-          navigate(`/user/${userData.username}`);  // Redirect users
-        }
+        navigate(userData.role === "ADMIN" ? "/admin" : `/user/${userData.username}`);
       } else {
         setError("Invalid email or password.");
       }
     } catch (err) {
-      console.error("Login Error:", err);
       setError(err.message || "Login failed.");
     }
   };
-  
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
@@ -45,22 +38,20 @@ const Login = () => {
         <h2 className="text-2xl font-bold text-center mb-4">Login</h2>
         {error && <p className="text-red-500 text-sm text-center">{error}</p>}
         <form onSubmit={handleSubmit} className="space-y-4">
-          <input
+          <FormInput
             type="email"
             name="email"
-            placeholder="Email"
             value={credentials.email}
             onChange={handleChange}
-            className="w-full p-2 border rounded"
+            placeholder="Email"
             required
           />
-          <input
+          <FormInput
             type="password"
             name="password"
-            placeholder="Password"
             value={credentials.password}
             onChange={handleChange}
-            className="w-full p-2 border rounded"
+            placeholder="Password"
             required
           />
           <button
@@ -70,6 +61,14 @@ const Login = () => {
             Login
           </button>
         </form>
+        <div className="mt-4 text-center">
+          <p>
+            If you haven't registered yet?{" "}
+            <Link to="/register" className="text-blue-500 hover:text-blue-700">
+              Sign Up
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );

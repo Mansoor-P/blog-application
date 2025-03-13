@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { registerUser } from "../../services/auth";
-import { useNavigate } from "react-router-dom";
+import { registerUser } from "../services/authService";
+import { useNavigate, Link } from "react-router-dom";
+import FormInput from "../components/FormInput";
 
 const Register = () => {
   const [userData, setUserData] = useState({
@@ -8,7 +9,7 @@ const Register = () => {
     email: "",
     fullName: "",
     password: "",
-    role: "USER", // Default role
+    role: "USER",
   });
 
   const [error, setError] = useState("");
@@ -22,62 +23,70 @@ const Register = () => {
     e.preventDefault();
     try {
       await registerUser(userData);
-      navigate("/login"); // Redirect to login
+      navigate("/login");
     } catch (err) {
-      setError(err.message);
+      setError(err.message || "Registration failed.");
     }
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+    <div className="flex justify-center items-center min-h-screen bg-gray-100">
+      <div className="bg-white p-6 rounded-lg shadow-lg w-full sm:w-96">
         <h2 className="text-2xl font-bold text-center mb-4">Register</h2>
-        {error && <p className="text-red-500 text-sm">{error}</p>}
+        {error && <p className="text-red-500 text-sm text-center">{error}</p>}
         <form onSubmit={handleSubmit} className="space-y-4">
-          <input
+          <FormInput
             type="text"
             name="username"
-            placeholder="Username"
             value={userData.username}
             onChange={handleChange}
-            className="w-full p-2 border rounded"
-            required
+            placeholder="Username"
           />
-          <input
+          <FormInput
             type="email"
             name="email"
-            placeholder="Email"
             value={userData.email}
             onChange={handleChange}
-            className="w-full p-2 border rounded"
-            required
+            placeholder="Email"
           />
-          <input
+          <FormInput
             type="text"
             name="fullName"
-            placeholder="Full Name"
             value={userData.fullName}
             onChange={handleChange}
-            className="w-full p-2 border rounded"
-            required
+            placeholder="Full Name"
           />
-          <select name="role" value={userData.role} onChange={handleChange} className="w-full p-2 border rounded">
+          <select
+            name="role"
+            value={userData.role}
+            onChange={handleChange}
+            className="w-full p-2 border rounded"
+          >
             <option value="USER">User</option>
             <option value="ADMIN">Admin</option>
           </select>
-          <input
+          <FormInput
             type="password"
             name="password"
-            placeholder="Password"
             value={userData.password}
             onChange={handleChange}
-            className="w-full p-2 border rounded"
-            required
+            placeholder="Password"
           />
-          <button type="submit" className="w-full bg-green-500 text-white p-2 rounded">
+          <button
+            type="submit"
+            className="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600 transition"
+          >
             Register
           </button>
         </form>
+        <div className="mt-4 text-center">
+          <p>
+            Already have an account?{" "}
+            <Link to="/login" className="text-blue-500 hover:text-blue-700">
+              Login
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );
