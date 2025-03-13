@@ -1,9 +1,10 @@
 import React from "react";
-import styles from "../styles/LandingPage.module.css";
+import { Link } from "react-router-dom";
+import styles from "../assets/styles/LandingPage.module.css";
 
 const Home = () => {
   return (
-    <div className={styles.container}>
+    <section className={styles.container}>
       {/* Left Side - Text Content */}
       <div className={styles.textContent}>
         <h1 className={styles.title}>Tech & Engineering</h1>
@@ -11,20 +12,20 @@ const Home = () => {
         <p className={styles.description}>
           A place to read, write, and deepen your understanding
         </p>
-        <button className={styles.readButton} >
+        <Link to={"/blogs"} className="bg-black hover:bg-gray-800 text-amber-50 p-3 rounded-full">
           Start Reading
-        </button>
+        </Link>
       </div>
-
       {/* Right Side - Image */}
       <div className={styles.imageContainer}>
         <img
           src="https://miro.medium.com/v2/format:webp/4*SdjkdS98aKH76I8eD0_qjw.png"
           alt="Tech Illustration"
           className={styles.image}
+          loading="lazy"
         />
       </div>
-    </div>
+    </section>
   );
 };
 
