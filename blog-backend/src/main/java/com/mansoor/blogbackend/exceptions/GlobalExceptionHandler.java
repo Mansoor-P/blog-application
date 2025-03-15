@@ -25,6 +25,12 @@ public class GlobalExceptionHandler {
         log.warn("⚠️ Blog not found: {}", ex.getMessage());
         return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage());
     }
+    // Handle User Not Found Exception
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleUserNotFound(UserNotFoundException ex) {
+        log.warn("⚠️ User not found: {}", ex.getMessage());
+        return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
 
     // Handle Wrong Endpoint (404)
     @ExceptionHandler(NoHandlerFoundException.class)
