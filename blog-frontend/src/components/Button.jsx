@@ -2,13 +2,13 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const COLORS = {
-  blue: "bg-blue-500 hover:bg-blue-600 text-white",
-  red: "bg-red-500 hover:bg-red-600 text-white",
-  green: "bg-green-500 hover:bg-green-600 text-white",
-  yellow: "bg-yellow-500 hover:bg-yellow-600 text-white",
-  gray: "bg-gray-500 hover:bg-gray-600 text-white",
-  black: "bg-black hover:bg-gray-800 text-white",
-  white: "bg-white hover:text-gray-800 text-black ",
+  blue: "bg-blue-500 hover:bg-blue-600 text-white rounded-full",
+  red: "bg-red-500 hover:bg-red-600 text-white rounded-full",
+  green: "bg-green-500 hover:bg-green-600 text-white rounded-full",
+  yellow: "bg-yellow-500 hover:bg-yellow-600 text-white rounded-full",
+  gray: "bg-gray-500 hover:bg-gray-600 text-white rounded-full",
+  black: "bg-black hover:bg-gray-800 text-white rounded-full",
+  white: "bg-white hover:text-gray-800 text-black rounded-full ",
 };
 
 const Button = ({

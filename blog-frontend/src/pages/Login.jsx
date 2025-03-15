@@ -1,74 +1,84 @@
-import React, { useState } from "react";
-import { loginUser } from "../services/authService";
-import { useNavigate, Link } from "react-router-dom";
-import FormInput from "../components/FormInput";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginUser, getUser } from "../services/authService";
+import { useNavigate } from "react-router-dom";
+import { z } from "zod";
+import { useEffect, useState } from "react";
+
+// Define form validation schema using Zod
+const schema = z.object({
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+});
 
 const Login = () => {
-  const [credentials, setCredentials] = useState({ email: "", password: "" });
-  const [error, setError] = useState("");
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
-  const handleChange = (e) => {
-    setCredentials({ ...credentials, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!credentials.email || !credentials.password) {
-      setError("Please enter both email and password.");
-      return;
+  // If already logged in, redirect to profile
+  useEffect(() => {
+    if (getUser()) {
+      navigate("/user/:username");
     }
+  }, [navigate]);
 
-    setError("");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ resolver: zodResolver(schema) });
+
+  const onSubmit = async (data) => {
     try {
-      const userData = await loginUser(credentials);
-      if (userData) {
-        navigate(userData.role === "ADMIN" ? "/admin" : `/user/${userData.username}`);
-      } else {
-        setError("Invalid email or password.");
-      }
-    } catch (err) {
-      setError(err.message || "Login failed.");
+      setLoading(true);
+      const user = await loginUser(data);
+      alert(`Welcome back, ${user.displayName || user.username}!`);
+      navigate("/user/:username");
+    } catch (error) {
+      alert(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-        <h2 className="text-2xl font-bold text-center mb-4">Login</h2>
-        {error && <p className="text-red-500 text-sm text-center">{error}</p>}
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <FormInput
-            type="email"
-            name="email"
-            value={credentials.email}
-            onChange={handleChange}
+    <div className="flex justify-center items-center min-h-screen bg-gray-100">
+      <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-md">
+        <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <input
+            {...register("email")}
             placeholder="Email"
-            required
+            className="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300"
           />
-          <FormInput
+          {errors.email && (
+            <p className="text-red-500 text-sm">{errors.email.message}</p>
+          )}
+
+          <input
+            {...register("password")}
             type="password"
-            name="password"
-            value={credentials.password}
-            onChange={handleChange}
             placeholder="Password"
-            required
+            className="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300"
           />
+          {errors.password && (
+            <p className="text-red-500 text-sm">{errors.password.message}</p>
+          )}
+
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition"
+            disabled={loading}
+            className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition"
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
-        <div className="mt-4 text-center">
-          <p>
-            If you haven't registered yet?{" "}
-            <Link to="/register" className="text-blue-500 hover:text-blue-700">
-              Sign Up
-            </Link>
-          </p>
-        </div>
+        <p className="mt-4 text-center">
+          Don't have an account?{" "}
+          <a href="/register" className="text-blue-500">
+            Register
+          </a>
+        </p>
       </div>
     </div>
   );

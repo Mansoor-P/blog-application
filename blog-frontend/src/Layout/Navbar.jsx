@@ -1,55 +1,97 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { logoutUser } from "../services/authService";
+import { Menu, X } from "lucide-react";
 import styles from "../assets/styles/Navbar.module.css";
 import Button from "../components/Button";
 import NavLink from "../components/NavLink";
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false);
 
-  const getUser = () => {
-    try {
-      const userData = localStorage.getItem("user");
-      return userData ? JSON.parse(userData) : null;
-    } catch (error) {
-      console.error("Error parsing user data:", error);
-      return null;
-    }
-  };
+  // ✅ Ensure `user` is properly fetched from localStorage
+  const user = JSON.parse(localStorage.getItem("user")) || null;
 
-  const user = getUser();
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "auto";
+  }, [menuOpen]);
+
+  const menuItems = ["Blogs", "About"];
+
+  const authButtons = user
+    ? [
+        {
+          to: user?.role === "ADMIN" ? "/admin" : `/user/${user?.username}`,
+          text: `${user?.displayName || user?.username} (${
+            user?.role || "User"
+          })`,
+          className: "text-indigo-400",
+        },
+      ]
+    : [
+        { to: "/login", text: "Login" },
+        { to: "/register", text: "Register" },
+      ];
 
   return (
-    <nav
-      className={`${styles.navbar} bg-gray-800 p-4 text-white flex justify-between items-center`}
-    >
-      <Link to="/" className={styles.logo}>
-        Blogging
-      </Link>
+    <nav className={`${styles.navbar} p-4`}>
+      <div className="max-w-7xl mx-auto flex justify-between items-center">
+        <Link to="/" className={`${styles.logo} text-xl font-semibold`}>
+          Blogging
+        </Link>
+        <button className="md:hidden" onClick={() => setMenuOpen(!menuOpen)}>
+          {menuOpen ? <X size={32} /> : <Menu size={32} />}
+        </button>
+        <div className="hidden md:flex items-center space-x-6">
+          {menuItems.map((item) => (
+            <NavLink key={item} to={`/${item.toLowerCase()}`} text={item} />
+          ))}
+          {authButtons.map(({ to, text, className }) => (
+            <NavLink key={text} to={to} text={text} className={className} />
+          ))}
+          <Button
+            onClick={() => navigate(user ? "/blogs" : "/login")}
+            text="Get Started"
+            color="white"
+          />
+        </div>
+      </div>
 
-      <div className="flex items-center space-x-4">
-        <NavLink to="/blogs" text="Blogs" />
-        <NavLink to="/about" text="About" />
-
-        {user ? (
-          <>
-            <NavLink
-              to={user.role === "ADMIN" ? "/admin" : `/user/${user.username}`}
-              text={`${user.fullName} (${user.role})`}
-              className="text-indigo-500"
-            />
-          </>
-        ) : (
-          <>
-            <Button to="/login" text="Login" color="white" />
-            <Button to="/register" text="Register" color="white" />
-          </>
-        )}
-
-        {/* Get Started Button */}
+      {menuOpen && (
+        <div
+          className={styles.overlay}
+          onClick={() => setMenuOpen(false)}
+        ></div>
+      )}
+      <div className={`${styles.mobileMenu} ${menuOpen ? styles.open : ""}`}>
+        <button
+          className={styles.closeButton}
+          onClick={() => setMenuOpen(false)}
+        >
+          <X size={32} />
+        </button>
+        {menuItems.map((item) => (
+          <NavLink
+            key={item}
+            to={`/${item.toLowerCase()}`}
+            text={item}
+            onClick={() => setMenuOpen(false)}
+          />
+        ))}
+        {authButtons.map(({ to, text, className }) => (
+          <NavLink
+            key={text}
+            to={to}
+            text={text}
+            className={className}
+            onClick={() => setMenuOpen(false)}
+          />
+        ))}
         <Button
-          onClick={() => navigate(user ? "/blogs" : "/login")}
+          onClick={() => {
+            setMenuOpen(false);
+            navigate(user ? "/blogs" : "/login");
+          }}
           text="Get Started"
           color="white"
         />

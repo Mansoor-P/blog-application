@@ -6,16 +6,16 @@ export const BLOG_API = {
   CREATE_BLOG: `${BASE_URL}/blogs`,
 };
 
-// Dynamic Endpoints as Functions
+// Dynamic Endpoints
 export const getBlogById = (id) => `${BASE_URL}/blogs/${id}`;
-export const updateBlog = (id) => `${BASE_URL}/blogs/${id}`;
-export const deleteBlog = (id) => `${BASE_URL}/blogs/${id}`;
-export const getBlogsByUser = (userId) => `${BASE_URL}/blogs/user/${userId}`;
+export const updateBlogById = (id) => `${BASE_URL}/blogs/${id}`;
+export const deleteBlogById = (id) => `${BASE_URL}/blogs/${id}`;
+export const getBlogsByUser = (authorId) =>
+  `${BASE_URL}/blogs/author/${authorId}`; // ✅ Corrected
 
 // Authentication API Endpoints
 export const AUTH_API = {
   REGISTER: `${BASE_URL}/auth/register`,
   LOGIN: `${BASE_URL}/auth/login`,
-  LOGOUT: `${BASE_URL}/auth/logout`,
-  GET_PROFILE: `${BASE_URL}/auth/profile`,
+  GET_PROFILE: (userId) => `${BASE_URL}/auth/${userId}`, // ✅ Corrected
 };

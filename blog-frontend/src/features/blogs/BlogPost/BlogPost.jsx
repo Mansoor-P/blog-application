@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { createBlog } from "../../../services/blogService";
-
+import slugify from "slugify";
 import Button from "../../../components/Button";
 
 const BlogPost = () => {
@@ -9,10 +9,14 @@ const BlogPost = () => {
 
   const [formData, setFormData] = useState({
     title: "",
+    slug: "",
     summary: "",
     content: "",
-    author: "",
-    userId: null,
+    coverImageUrl: "",
+    tags: "",
+    status: "DRAFT", // Default status
+    readTime: 0, // Will be calculated dynamically
+    authorId: null,
   });
 
   const [loading, setLoading] = useState(false);
@@ -22,11 +26,10 @@ const BlogPost = () => {
   useEffect(() => {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
-      if (user?.id) {
+      if (user?.userId) {
         setFormData((prev) => ({
           ...prev,
-          author: user.fullName,
-          userId: user.id,
+          authorId: user.userId, // ✅ Corrected from `user.id`
         }));
       } else {
         navigate("/login");
@@ -36,6 +39,25 @@ const BlogPost = () => {
       navigate("/login");
     }
   }, [navigate]);
+
+  // ✅ Auto-generate slug from title
+  useEffect(() => {
+    if (formData.title) {
+      setFormData((prev) => ({
+        ...prev,
+        slug: slugify(formData.title, { lower: true, strict: true }),
+      }));
+    }
+  }, [formData.title]);
+
+  // ✅ Estimate read time (approx 200 words per minute)
+  useEffect(() => {
+    const wordCount = formData.content.trim().split(/\s+/).length;
+    setFormData((prev) => ({
+      ...prev,
+      readTime: Math.ceil(wordCount / 200),
+    }));
+  }, [formData.content]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -60,12 +82,17 @@ const BlogPost = () => {
     try {
       await createBlog(formData);
       setSuccessMessage("Blog published successfully!");
-      setFormData((prev) => ({
-        ...prev,
+      setFormData({
         title: "",
+        slug: "",
         summary: "",
         content: "",
-      }));
+        coverImageUrl: "",
+        tags: "",
+        status: "DRAFT",
+        readTime: 0,
+        authorId: formData.authorId,
+      });
 
       setTimeout(() => {
         setSuccessMessage("");
@@ -113,6 +140,23 @@ const BlogPost = () => {
 
         <div>
           <label
+            htmlFor="slug"
+            className="block text-gray-700 font-medium mb-1"
+          >
+            Slug (Auto-generated)
+          </label>
+          <input
+            type="text"
+            name="slug"
+            id="slug"
+            className="w-full p-3 border rounded-lg bg-gray-100"
+            value={formData.slug}
+            readOnly
+          />
+        </div>
+
+        <div>
+          <label
             htmlFor="summary"
             className="block text-gray-700 font-medium mb-1"
           >
@@ -147,6 +191,63 @@ const BlogPost = () => {
             onChange={handleChange}
             required
           ></textarea>
+        </div>
+
+        <div>
+          <label
+            htmlFor="coverImageUrl"
+            className="block text-gray-700 font-medium mb-1"
+          >
+            Cover Image URL (Optional)
+          </label>
+          <input
+            type="url"
+            name="coverImageUrl"
+            id="coverImageUrl"
+            className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Paste cover image URL here..."
+            value={formData.coverImageUrl}
+            onChange={handleChange}
+          />
+        </div>
+
+        <div>
+          <label
+            htmlFor="tags"
+            className="block text-gray-700 font-medium mb-1"
+          >
+            Tags (comma separated)
+          </label>
+          <input
+            type="text"
+            name="tags"
+            id="tags"
+            className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="e.g., Java, React, Spring Boot"
+            value={formData.tags}
+            onChange={handleChange}
+          />
+        </div>
+
+        <div className="flex justify-between">
+          <label className="flex items-center">
+            <input
+              type="checkbox"
+              name="status"
+              checked={formData.status === "PUBLISHED"}
+              onChange={() =>
+                setFormData((prev) => ({
+                  ...prev,
+                  status: prev.status === "DRAFT" ? "PUBLISHED" : "DRAFT",
+                }))
+              }
+              className="mr-2"
+            />
+            Publish Now
+          </label>
+          <span className="text-gray-500">
+            Estimated Read Time: {formData.readTime} min
+          </span>
         </div>
 
         <div className="flex justify-end">
