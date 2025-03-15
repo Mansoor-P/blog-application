@@ -1,15 +1,28 @@
 package com.mansoor.blogbackend.dto;
 
-import com.mansoor.blogbackend.models.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class UserDTO {
+    private Long userId;
     private String username;
     private String email;
-    private String password;
-    private String fullName;
-    private Role role;
+    private String passwordHash;
+    private String profilePictureUrl;
+    private String bio;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private String displayName;
+    private String socialLinks;
+    private int followersCount;
+    private int followingCount;
+    private String accountStatus;
+    private List<BlogDTO> blogs;
 }
