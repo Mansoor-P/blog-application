@@ -8,6 +8,8 @@ import NavLink from "../components/NavLink";
 const Navbar = () => {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
+
+  // ✅ Ensure `user` is properly fetched from localStorage
   const user = JSON.parse(localStorage.getItem("user")) || null;
 
   useEffect(() => {
@@ -15,11 +17,14 @@ const Navbar = () => {
   }, [menuOpen]);
 
   const menuItems = ["Blogs", "About"];
+
   const authButtons = user
     ? [
         {
-          to: user.role === "ADMIN" ? "/admin" : `/user/${user.username}`,
-          text: `${user.fullName} (${user.role})`,
+          to: user?.role === "ADMIN" ? "/admin" : `/user/${user?.username}`,
+          text: `${user?.displayName || user?.username} (${
+            user?.role || "User"
+          })`,
           className: "text-indigo-400",
         },
       ]
