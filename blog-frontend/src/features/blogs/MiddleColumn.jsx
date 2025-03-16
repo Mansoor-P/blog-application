@@ -10,9 +10,10 @@ const MiddleColumn = ({ blogs }) => {
 
   return (
     <div className="w-full lg:w-2/3">
-      {blogs.map((blog) => (
-        <BlogCard key={blog.postId} blog={blog} /> // ✅ Rendering BlogCard
-      ))}
+      {blogs.map((blog, index) => {
+        if (!blog || typeof blog !== "object") return null; // 🚀 Prevent errors
+        return <BlogCard key={blog.postId || index} blog={blog} />;
+      })}
     </div>
   );
 };
