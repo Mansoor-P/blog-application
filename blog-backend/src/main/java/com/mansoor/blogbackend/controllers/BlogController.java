@@ -1,5 +1,6 @@
 package com.mansoor.blogbackend.controllers;
 
+import com.mansoor.blogbackend.config.HtmlSanitizer;
 import com.mansoor.blogbackend.dto.BlogDTO;
 import com.mansoor.blogbackend.services.BlogService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,9 +30,13 @@ public class BlogController {
 
     @Operation(summary = "Get a blog by ID")
     @GetMapping("/{postId}")
-    public ResponseEntity<BlogDTO> getBlogById(@PathVariable Long postId) {
+    public BlogDTO getBlogById(@PathVariable Long postId) {
         log.info("Fetching blog with ID: {}", postId);
-        return ResponseEntity.ok(blogService.getBlogById(postId));
+
+        BlogDTO blog = blogService.getBlogById(postId);
+        // Sanitize before sending to frontend
+        blog.setContent(HtmlSanitizer.sanitize(blog.getContent()));
+        return blog;
     }
 
     @Operation(summary = "Get a blog by Slug")

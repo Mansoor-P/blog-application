@@ -19,22 +19,22 @@ const handleApiError = (error, message) => {
     console.error(`${message}:`, error.response.data);
     throw new Error(error.response.data.message || message);
   } else if (error.request) {
+    console.error(`${message}: No response received`, error.request);
     throw new Error(`${message}, no response received`);
   } else {
+    console.error(`${message}: Unexpected error`, error.message);
     throw new Error(`${message}, please try again`);
   }
 };
 
 // Fetch all blogs
-
 export const fetchBlogs = async () => {
   try {
-    const response = await axios.get(BLOG_API.GET_ALL_BLOGS);
+    const response = await api.get(BLOG_API.GET_ALL_BLOGS);
     console.log("Fetched Blogs:", response.data); // ✅ Debugging
     return response.data;
   } catch (error) {
-    console.error("Error fetching blogs:", error);
-    throw new Error(error.response?.data?.message || "Failed to fetch blogs.");
+    handleApiError(error, "Failed to fetch blogs");
   }
 };
 
@@ -72,7 +72,7 @@ export const updateBlog = async (id, blogData) => {
 export const deleteBlog = async (id) => {
   try {
     await api.delete(deleteBlogById(id));
-    return "Blog deleted successfully";
+    return { message: "Blog deleted successfully" };
   } catch (error) {
     handleApiError(error, "Error deleting blog");
   }
@@ -81,7 +81,18 @@ export const deleteBlog = async (id) => {
 // Fetch blogs by User ID
 export const fetchUserBlogs = async (authorId) => {
   try {
-    const response = await api.get(getBlogsByUser(authorId));
+    const response = await api.get(`/user/${authorId}/my-blogs`); // ✅ Directly use the endpoint
+    return response.data;
+  } catch (error) {
+    handleApiError(error, "Error fetching blogs by user");
+  }
+};
+
+
+// Ensure this function exists in blogService.js
+export const fetchBlogsByUser = async (username) => {
+  try {
+    const response = await api.get(`/user/${username}/my-blogs`); // ✅ Ensure correct endpoint
     return response.data;
   } catch (error) {
     handleApiError(error, "Error fetching blogs by user");
