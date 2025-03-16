@@ -3,27 +3,29 @@ import { fetchBlogs } from "../services/blogService";
 import { blogReducer, initialState } from "../reducers/blogReducer";
 import MiddleColumn from "../features/blogs/MiddleColumn";
 
-const BlogList  = () => {
+const BlogList = () => {
   const [state, dispatch] = useReducer(blogReducer, initialState);
 
   useEffect(() => {
     const loadBlogs = async () => {
-      dispatch({ type: "FETCH_INIT" }); // Start loading
+      dispatch({ type: "FETCH_INIT" });
       try {
         const blogs = await fetchBlogs();
-        console.log("Blogs in State:", blogs); // ✅ Debugging
+        console.log("Fetched Blogs:", JSON.stringify(blogs, null, 2)); // ✅ Debug API response
         dispatch({ type: "FETCH_SUCCESS", payload: blogs });
       } catch (error) {
-        dispatch({ type: "FETCH_ERROR", payload: error.message });
+        console.error("Error fetching blogs:", error);
+        dispatch({ type: "FETCH_ERROR", payload: "Failed to load blogs." });
       }
     };
-
     loadBlogs();
   }, []);
 
   if (state.loading) {
     return (
-      <div className="text-center text-xl font-semibold">Loading blogs...</div>
+      <div className="text-center text-xl font-semibold" aria-live="polite">
+        Loading blogs...
+      </div>
     );
   }
 
@@ -33,7 +35,7 @@ const BlogList  = () => {
         <p>{state.error}</p>
         <button
           onClick={() => window.location.reload()}
-          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg"
+          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
         >
           Retry
         </button>
@@ -41,7 +43,7 @@ const BlogList  = () => {
     );
   }
 
-  if (state.blogs.length === 0) {
+  if (!state.blogs.length) {
     return (
       <div className="text-center text-gray-600 text-lg">No blogs found.</div>
     );
@@ -56,4 +58,4 @@ const BlogList  = () => {
   );
 };
 
-export default BlogList ;
+export default BlogList;

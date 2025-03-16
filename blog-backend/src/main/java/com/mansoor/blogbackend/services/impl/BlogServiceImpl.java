@@ -1,5 +1,6 @@
 package com.mansoor.blogbackend.services.impl;
 
+import com.mansoor.blogbackend.config.HtmlSanitizer;
 import com.mansoor.blogbackend.dto.BlogDTO;
 import com.mansoor.blogbackend.exceptions.BlogNotFoundException;
 import com.mansoor.blogbackend.exceptions.UserNotFoundException;
@@ -27,22 +28,31 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     public BlogDTO createBlog(BlogDTO blogDTO) {
+        // Check if author exists
         User author = userRepository.findById(blogDTO.getAuthorId())
                 .orElseThrow(() -> new UserNotFoundException("Author not found with ID: " + blogDTO.getAuthorId()));
 
         Blog blog = new Blog();
         blog.setTitle(blogDTO.getTitle());
         blog.setSlug(blogDTO.getSlug());
-        blog.setContent(blogDTO.getContent());
+        blog.setContent(HtmlSanitizer.sanitize(blogDTO.getContent())); // Sanitize HTML
         blog.setCoverImageUrl(blogDTO.getCoverImageUrl());
         blog.setPublishedAt(blogDTO.getPublishedAt());
-        blog.setStatus(BlogStatus.valueOf(blogDTO.getStatus()));
+
+        // Validate status
+        try {
+            blog.setStatus(BlogStatus.valueOf(blogDTO.getStatus().toUpperCase()));
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid blog status: " + blogDTO.getStatus());
+        }
+
         blog.setReadTime(blogDTO.getReadTime());
         blog.setTags(blogDTO.getTags());
         blog.setAuthor(author);
 
         return convertToDTO(blogRepository.save(blog));
     }
+
 
     @Override
     public BlogDTO getBlogById(Long postId) {
