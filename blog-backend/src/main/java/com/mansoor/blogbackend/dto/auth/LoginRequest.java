@@ -1,4 +1,4 @@
-package com.mansoor.blogbackend.dto;
+package com.mansoor.blogbackend.dto.auth;
 
 import lombok.Data;
 

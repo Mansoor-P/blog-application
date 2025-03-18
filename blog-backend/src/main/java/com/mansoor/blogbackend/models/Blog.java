@@ -1,69 +1,128 @@
 package com.mansoor.blogbackend.models;
 
+import com.mansoor.blogbackend.models.enums.BlogStatus;
+import com.mansoor.blogbackend.models.enums.CommentPolicy;
+import com.mansoor.blogbackend.models.enums.ReadingLevel;
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.LocalDateTime;
+import java.util.List;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
-@Table(name = "blogs") // Ensure correct table name
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Table(name = "blogs")
 public class Blog {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "post_id")
-    private Long postId;
+    private Long id;
 
-    @Column(name = "title", nullable = false, length = 255)
+    @Column(nullable = false, length = 150)
     private String title;
 
-    @Column(name = "slug", nullable = false, unique = true, length = 255)
+    @Column(nullable = false, unique = true, length = 150)
     private String slug;
 
-    @Column(name = "content", nullable = false, columnDefinition = "LONGTEXT")
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
-    @Column(name = "cover_image_url")
-    private String coverImageUrl;
+    @Column(length = 255)
+    private String coverImage;
 
-    @Column(name = "published_at")
     private LocalDateTime publishedAt;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
 
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt = LocalDateTime.now();
+    @Column(nullable = false)
+    private LocalDateTime updatedAt;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
+    @Column(nullable = false)
     private BlogStatus status = BlogStatus.DRAFT;
 
-    @Column(name = "read_time")
     private int readTime;
 
-    @Column(name = "tags", columnDefinition = "TEXT")
-    private String tags;
+    @ElementCollection
+    @CollectionTable(name = "blog_tags", joinColumns = @JoinColumn(name = "blog_id"))
+    @Column(name = "tag")
+    private List<String> tags;
 
-    @Column(name = "likes_count")
+    @Column(length = 100)
+    private String category;
+
+    @Column(length = 100)
+    private String subCategory;
+
     private int likesCount = 0;
 
-    @Column(name = "comments_count")
     private int commentsCount = 0;
 
-    @Column(name = "views_count")
     private int viewsCount = 0;
 
-    @Column(name = "is_featured")
     private boolean isFeatured = false;
 
-    // Many-to-One relationship with User
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "author_id", nullable = false) // Ensure correct column name
+    @ManyToOne
+    @JoinColumn(name = "author_id", nullable = false)
     private User author;
+
+    private boolean isPremiumContent = false;
+
+    private boolean isTrending = false;
+
+    private boolean isPinned = false;
+
+    private Long seriesId;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ReadingLevel readingLevel = ReadingLevel.BEGINNER;
+
+    @Column(length = 10)
+    private String language = "EN";
+
+    @Column(length = 255)
+    private String canonicalUrl;
+
+    private int sharedCount = 0;
+
+    private int bookmarkedCount = 0;
+
+    private int reportCount = 0;
+
+    @ElementCollection
+    @CollectionTable(name = "blog_edit_history", joinColumns = @JoinColumn(name = "blog_id"))
+    @Column(name = "edit_entry", columnDefinition = "TEXT")
+    private List<String> editHistory;
+
+    @ElementCollection
+    @CollectionTable(name = "related_blogs", joinColumns = @JoinColumn(name = "blog_id"))
+    @Column(name = "related_blog_id")
+    private List<Long> relatedBlogs;
+
+    @ElementCollection
+    @CollectionTable(name = "blog_polls", joinColumns = @JoinColumn(name = "blog_id"))
+    @Column(name = "poll_entry")
+    private List<String> polls;
+
+    @ElementCollection
+    @CollectionTable(name = "blog_attachments", joinColumns = @JoinColumn(name = "blog_id"))
+    @Column(name = "attachment_url", length = 255)
+    private List<String> attachments;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private CommentPolicy commentPolicy = CommentPolicy.OPEN;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
 
     @PreUpdate
     protected void onUpdate() {

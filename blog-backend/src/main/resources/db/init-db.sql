@@ -1,0 +1,171 @@
+---- ========================================================
+---- Users Table: Stores user information and account details
+---- ========================================================
+--CREATE TABLE users (
+--    user_id BIGINT PRIMARY KEY AUTO_INCREMENT, -- Unique identifier for each user
+--    username VARCHAR(50) UNIQUE NOT NULL,      -- Unique username
+--    email VARCHAR(100) UNIQUE NOT NULL,        -- Unique email address
+--    password_hash TEXT NOT NULL,               -- Hashed password for security
+--    display_name VARCHAR(100),                 -- User's display name
+--    user_profile_image TEXT,                   -- Profile image URL
+--    bio VARCHAR(255),                          -- Short bio description
+--
+--    -- Account & Role Management
+--    account_status ENUM('ACTIVE', 'SUSPENDED', 'DELETED', 'PENDING_VERIFICATION') DEFAULT 'PENDING_VERIFICATION',
+--    role ENUM('USER', 'ADMIN', 'MODERATOR', 'EDITOR') DEFAULT 'USER', -- User roles
+--
+--    -- Social & Website Links
+--    social_links JSON,                         -- JSON object for social media links
+--    website_url TEXT,                          -- Personal website URL
+--
+--    -- Engagement Metrics
+--    followers_count INT DEFAULT 0,             -- Number of followers
+--    following_count INT DEFAULT 0,             -- Number of users they follow
+--
+--    -- Timestamps
+--    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Account creation date
+--    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- Last update timestamp
+--    last_login_at TIMESTAMP,                   -- Last login timestamp
+--
+--    -- Blog Interactions
+--    bookmarked_blogs JSON,                     -- JSON array of bookmarked blog post IDs
+--    total_likes_received INT DEFAULT 0,        -- Total likes received on all posts
+--    total_views_received INT DEFAULT 0,        -- Total views received on all posts
+--
+--    -- User Preferences & Settings
+--    preferences JSON,                          -- JSON object for user preferences
+--    location VARCHAR(255),                     -- User location
+--    is_verified BOOLEAN DEFAULT FALSE,         -- Email verification status
+--
+--    -- Premium & Subscriptions
+--    subscriptions JSON,                        -- JSON object for subscription details
+--    tags_followed JSON,                        -- JSON object for followed tags
+--    is_premium_user BOOLEAN DEFAULT FALSE,     -- Premium membership status
+--
+--    -- Device & Login History
+--    device_info JSON,                          -- JSON object for device information
+--    login_history JSON                         -- JSON object for login activity history
+--);
+--
+---- ========================================================
+---- Blogs Table: Stores blog post details and metadata
+---- ========================================================
+--CREATE TABLE blogs (
+--    post_id BIGINT PRIMARY KEY AUTO_INCREMENT, -- Unique blog post ID
+--    title VARCHAR(150) NOT NULL,               -- Blog post title
+--    slug VARCHAR(150) UNIQUE NOT NULL,         -- SEO-friendly URL slug
+--    content TEXT NOT NULL,                     -- Blog post content
+--    cover_image TEXT,                          -- Cover image URL
+--
+--    -- Timestamps
+--    published_at TIMESTAMP,                    -- When the post was published
+--    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Creation date
+--    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- Last update date
+--
+--    -- Status & Readability
+--    status ENUM('DRAFT', 'PUBLISHED', 'ARCHIVED', 'UNDER_REVIEW') DEFAULT 'DRAFT', -- Blog status
+--    read_time INT,                             -- Estimated read time in minutes
+--
+--    -- Tags & Categorization
+--    tags JSON,                                 -- JSON array of tags
+--    category VARCHAR(100),                     -- Blog category
+--    sub_category VARCHAR(100),                 -- Blog subcategory
+--
+--    -- Engagement Metrics
+--    likes_count INT DEFAULT 0,                 -- Total likes
+--    comments_count INT DEFAULT 0,              -- Total comments
+--    views_count INT DEFAULT 0,                 -- Total views
+--    is_featured BOOLEAN DEFAULT FALSE,         -- Whether the blog is featured
+--
+--    -- Author Details
+--    author_id BIGINT,                          -- Reference to the author's user ID
+--    author_username VARCHAR(50),               -- Author's username
+--
+--    -- Blog Properties
+--    is_premium_content BOOLEAN DEFAULT FALSE,  -- Whether the post is premium content
+--    is_trending BOOLEAN DEFAULT FALSE,         -- Trending post status
+--    is_pinned BOOLEAN DEFAULT FALSE,           -- Whether the post is pinned
+--    series_id BIGINT,                          -- ID of the blog series
+--
+--    -- Readability & SEO
+--    reading_level ENUM('BEGINNER', 'INTERMEDIATE', 'ADVANCED') DEFAULT 'BEGINNER', -- Target reader level
+--    language VARCHAR(10) DEFAULT 'EN',         -- Language of the blog post
+--    canonical_url TEXT,                        -- Canonical URL for SEO
+--
+--    -- Social & Sharing Metrics
+--    shared_count INT DEFAULT 0,                -- Number of times shared
+--    bookmarked_count INT DEFAULT 0,            -- Number of times bookmarked
+--    report_count INT DEFAULT 0,                -- Number of times reported
+--
+--    -- Additional Features
+--    edit_history JSON,                         -- JSON array of previous edits
+--    related_blogs JSON,                        -- JSON array of related blog post IDs
+--    polls JSON,                                -- JSON object for polls
+--    attachments JSON,                          -- JSON object for attachments (images, files)
+--
+--    -- Comment Settings
+--    comment_policy ENUM('OPEN', 'RESTRICTED', 'NO_COMMENTS') DEFAULT 'OPEN', -- Comment policy
+--
+--    -- Foreign Key Constraints
+--    FOREIGN KEY (author_id) REFERENCES users(user_id) ON DELETE CASCADE -- Link to the author
+--);
+--
+---- ========================================================
+---- Comments Table: Stores user comments on blog posts
+---- ========================================================
+--CREATE TABLE comments (
+--    comment_id BIGINT PRIMARY KEY AUTO_INCREMENT, -- Unique comment ID
+--    post_id BIGINT NOT NULL,                      -- Blog post reference
+--    user_id BIGINT NOT NULL,                      -- User who commented
+--    content TEXT NOT NULL,                        -- Comment content
+--
+--    -- Timestamps
+--    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Comment creation date
+--    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- Last update date
+--
+--    -- Engagement Metrics
+--    likes_count INT DEFAULT 0,                     -- Number of likes on comment
+--    replies JSON,                                  -- JSON array of reply comment IDs
+--
+--    -- Foreign Key Constraints
+--    FOREIGN KEY (post_id) REFERENCES blogs(post_id) ON DELETE CASCADE,
+--    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+--);
+--
+---- ========================================================
+---- Likes Table: Tracks likes for blogs and comments
+---- ========================================================
+--CREATE TABLE likes (
+--    like_id BIGINT PRIMARY KEY AUTO_INCREMENT, -- Unique like ID
+--    user_id BIGINT NOT NULL,                   -- User who liked
+--    post_id BIGINT,                            -- Blog post reference (if applicable)
+--    comment_id BIGINT,                         -- Comment reference (if applicable)
+--
+--    -- Timestamps
+--    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Like creation date
+--
+--    -- Foreign Key Constraints
+--    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+--    FOREIGN KEY (post_id) REFERENCES blogs(post_id) ON DELETE CASCADE,
+--    FOREIGN KEY (comment_id) REFERENCES comments(comment_id) ON DELETE CASCADE
+--);
+--
+---- ========================================================
+---- Tags Table: Stores tags for categorizing blog posts
+---- ========================================================
+--CREATE TABLE tags (
+--    tag_id BIGINT PRIMARY KEY AUTO_INCREMENT, -- Unique tag ID
+--    name VARCHAR(100) UNIQUE NOT NULL         -- Tag name
+--);
+--
+---- ========================================================
+---- Blog_Tags Table: Many-to-Many Relationship between Blogs and Tags
+---- ========================================================
+--CREATE TABLE blog_tags (
+--    post_id BIGINT NOT NULL, -- Blog post reference
+--    tag_id BIGINT NOT NULL,  -- Tag reference
+--
+--    -- Foreign Key Constraints
+--    FOREIGN KEY (post_id) REFERENCES blogs(post_id) ON DELETE CASCADE,
+--    FOREIGN KEY (tag_id) REFERENCES tags(tag_id) ON DELETE CASCADE
+--);

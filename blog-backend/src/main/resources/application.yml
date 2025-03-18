@@ -1,13 +1,17 @@
 # Server Configuration
 server:
   port: 8080
+  error:
+    include-message: always # Show error details in responses (for debugging)
 
 # Application Configuration
 spring:
+  profiles:
+    active: dev  # Set active profile (either 'dev' or 'prod')
   application:
     name: blog-backend
 
-  # Database Configuration
+  # Database Configuration (Loaded from .env)
   datasource:
     url: ${DATASOURCE_URL}
     username: ${DATASOURCE_USER}
@@ -20,12 +24,17 @@ spring:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     show-sql: true
 
-  # Spring Dev Tools
+  # DevTools for Auto Restart
   devtools:
     restart:
       enabled: true
     livereload:
       enabled: true
+
+  # JSON Formatting
+  jackson:
+    serialization:
+      indent-output: true # Pretty-print JSON responses
 
 # Logging Configuration
 logging:
@@ -35,24 +44,24 @@ logging:
       springframework: DEBUG
       hibernate: DEBUG
 
-# Spring Actuator (Health Monitoring)
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,info,metrics
-  health:
-    db:
-      enabled: true
-    diskspace:
-      enabled: true
-    status:
-      http-mapping:
-        UP: 200
-        DOWN: 503
-        UNKNOWN: 404
+# Spring Actuator for Health Monitoring
+  management:
+    endpoints:
+      web:
+        exposure:
+          include: health,info,metrics
+    health:
+      db:
+        enabled: true
+      diskspace:
+        enabled: true
+      status:
+        http-mapping:
+          UP: 200
+          DOWN: 503
+          UNKNOWN: 404
 
-# Swagger API Documentation Configuration
+# Swagger API Documentation
 springdoc:
   api-docs:
     path: /api-docs
@@ -60,6 +69,14 @@ springdoc:
     path: /swagger-ui
     operationsSorter: method
     tagsSorter: alpha
+
+# API Base URLs (Loaded from .env)
+api:
+  base: ${API_BASE}
+  auth: ${API_AUTH}
+  users: ${API_USERS}
+  blogs: ${API_BLOGS}
+  comments: ${API_COMMENTS}
 
 # Frontend Configuration
 frontend:

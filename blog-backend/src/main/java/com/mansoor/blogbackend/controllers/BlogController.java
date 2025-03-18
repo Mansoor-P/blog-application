@@ -1,84 +1,110 @@
 package com.mansoor.blogbackend.controllers;
 
-import com.mansoor.blogbackend.config.HtmlSanitizer;
 import com.mansoor.blogbackend.dto.BlogDTO;
 import com.mansoor.blogbackend.services.BlogService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1/blogs")
-@RequiredArgsConstructor
-@Slf4j
-@Tag(name = "Blog API", description = "Endpoints for managing blog posts")
+@RequestMapping("/api/blogs")
 public class BlogController {
 
     private final BlogService blogService;
 
-    @Operation(summary = "Create a new blog post")
+    public BlogController(BlogService blogService) {
+        this.blogService = blogService;
+    }
+
+    // 🔹 Create a new blog post
     @PostMapping
-    public ResponseEntity<BlogDTO> createBlog(@RequestBody BlogDTO blogDTO) {
-        log.info("Creating a new blog: {}", blogDTO.getTitle());
-        return ResponseEntity.status(201).body(blogService.createBlog(blogDTO));
+    public ResponseEntity<BlogDTO> createBlog(@RequestBody BlogDTO blogDTO, HttpSession session) {
+        BlogDTO createdBlog = blogService.createBlog(blogDTO, session);
+        return ResponseEntity.ok(createdBlog);
     }
 
-    @Operation(summary = "Get a blog by ID")
+    // 🔹 Update an existing blog post
+    @PutMapping("/{postId}")
+    public ResponseEntity<BlogDTO> updateBlog(
+            @PathVariable Long postId,
+            @RequestBody BlogDTO blogDTO,
+            HttpSession session) {
+        BlogDTO updatedBlog = blogService.updateBlog(postId, blogDTO, session);
+        return ResponseEntity.ok(updatedBlog);
+    }
+
+    // 🔹 Delete a blog post
+    @DeleteMapping("/{postId}")
+    public ResponseEntity<String> deleteBlog(@PathVariable Long postId, HttpSession session) {
+        blogService.deleteBlog(postId, session);
+        return ResponseEntity.ok("Blog deleted successfully!");
+    }
+
+    // 🔹 Get a blog by ID
     @GetMapping("/{postId}")
-    public BlogDTO getBlogById(@PathVariable Long postId) {
-        log.info("Fetching blog with ID: {}", postId);
-
-        BlogDTO blog = blogService.getBlogById(postId);
-        // Sanitize before sending to frontend
-        blog.setContent(HtmlSanitizer.sanitize(blog.getContent()));
-        return blog;
+    public ResponseEntity<BlogDTO> getBlogById(@PathVariable Long postId) {
+        Optional<BlogDTO> blog = blogService.getBlogById(postId);
+        return blog.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @Operation(summary = "Get a blog by Slug")
+    // 🔹 Get a blog by slug
     @GetMapping("/slug/{slug}")
     public ResponseEntity<BlogDTO> getBlogBySlug(@PathVariable String slug) {
-        log.info("Fetching blog with slug: {}", slug);
-        return ResponseEntity.ok(blogService.getBlogBySlug(slug));
+        Optional<BlogDTO> blog = blogService.getBlogBySlug(slug);
+        return blog.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @Operation(summary = "Get all blogs")
-    @GetMapping
-    public ResponseEntity<List<BlogDTO>> getAllBlogs() {
-        log.info("Fetching all blogs");
-        return ResponseEntity.ok(blogService.getAllBlogs());
-    }
-
-    @Operation(summary = "Get all blogs by Author ID")
+    // 🔹 Get all blogs by an author
     @GetMapping("/author/{authorId}")
     public ResponseEntity<List<BlogDTO>> getBlogsByAuthor(@PathVariable Long authorId) {
-        log.info("Fetching blogs for author ID: {}", authorId);
-        return ResponseEntity.ok(blogService.getBlogsByAuthor(authorId));
+        List<BlogDTO> blogs = blogService.getBlogsByAuthor(authorId);
+        return ResponseEntity.ok(blogs);
     }
 
-    @Operation(summary = "Search blogs by title")
+    // 🔹 Get blogs by category
+    @GetMapping("/category/{category}")
+    public ResponseEntity<List<BlogDTO>> getBlogsByCategory(@PathVariable String category) {
+        List<BlogDTO> blogs = blogService.getBlogsByCategory(category);
+        return ResponseEntity.ok(blogs);
+    }
+
+    // 🔹 Get blogs by subcategory
+    @GetMapping("/subcategory/{subCategory}")
+    public ResponseEntity<List<BlogDTO>> getBlogsBySubCategory(@PathVariable String subCategory) {
+        List<BlogDTO> blogs = blogService.getBlogsBySubCategory(subCategory);
+        return ResponseEntity.ok(blogs);
+    }
+
+    // 🔹 Get trending blogs
+    @GetMapping("/trending")
+    public ResponseEntity<List<BlogDTO>> getTrendingBlogs() {
+        List<BlogDTO> blogs = blogService.getTrendingBlogs();
+        return ResponseEntity.ok(blogs);
+    }
+
+    // 🔹 Get premium blogs
+    @GetMapping("/premium")
+    public ResponseEntity<List<BlogDTO>> getPremiumBlogs() {
+        List<BlogDTO> blogs = blogService.getPremiumBlogs();
+        return ResponseEntity.ok(blogs);
+    }
+
+    // 🔹 Search blogs by title
     @GetMapping("/search")
-    public ResponseEntity<List<BlogDTO>> searchBlogs(@RequestParam String title) {
-        log.info("Searching blogs with title: {}", title);
-        return ResponseEntity.ok(blogService.searchBlogsByTitle(title));
+    public ResponseEntity<List<BlogDTO>> searchBlogsByTitle(@RequestParam String title) {
+        List<BlogDTO> blogs = blogService.searchBlogsByTitle(title);
+        return ResponseEntity.ok(blogs);
     }
 
-    @Operation(summary = "Update a blog post")
-    @PutMapping("/{postId}")
-    public ResponseEntity<BlogDTO> updateBlog(@PathVariable Long postId, @RequestBody BlogDTO blogDTO) {
-        log.info("Updating blog with ID: {}", postId);
-        return ResponseEntity.ok(blogService.updateBlog(postId, blogDTO));
-    }
-
-    @Operation(summary = "Delete a blog post")
-    @DeleteMapping("/{postId}")
-    public ResponseEntity<Void> deleteBlog(@PathVariable Long postId) {
-        log.info("Deleting blog with ID: {}", postId);
-        blogService.deleteBlog(postId);
-        return ResponseEntity.noContent().build();
+    // 🔹 Get the latest blogs
+    @GetMapping("/latest")
+    public ResponseEntity<List<BlogDTO>> getLatestBlogs() {
+        List<BlogDTO> blogs = blogService.getLatestBlogs();
+        return ResponseEntity.ok(blogs);
     }
 }

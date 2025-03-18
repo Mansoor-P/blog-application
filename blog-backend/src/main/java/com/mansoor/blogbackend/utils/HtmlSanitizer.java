@@ -1,4 +1,4 @@
-package com.mansoor.blogbackend.config;
+package com.mansoor.blogbackend.utils;
 
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Safelist;
