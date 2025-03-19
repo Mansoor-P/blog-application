@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { fetchBlogById } from "../services/blogService";
 import { FaRegEye, FaRegHeart, FaRegComment } from "react-icons/fa";
 import { motion } from "framer-motion";
-import DOMPurify from "dompurify"; // ✅ Import DOMPurify for sanitization
+import DOMPurify from "dompurify"; 
 
 const BlogDetail = () => {
   const { id } = useParams();

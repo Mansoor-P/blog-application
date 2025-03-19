@@ -2,100 +2,61 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import styles from "../assets/styles/Navbar.module.css";
-import Button from "../components/Button";
 import NavLink from "../components/NavLink";
+import AuthButtons from "../components/AuthButtons";
+import MobileMenu from "../components/MobileMenu";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
-
-  // ✅ Ensure `user` is properly fetched from localStorage
   const user = JSON.parse(localStorage.getItem("user")) || null;
+  const menuItems = ["Blogs", "About"];
 
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "auto";
   }, [menuOpen]);
 
-  const menuItems = ["Blogs", "About"];
-
-  const authButtons = user
-    ? [
-        {
-          to: user?.role === "ADMIN" ? "/admin" : `/user/${user?.username}`,
-          text: `${user?.displayName || user?.username} (${
-            user?.role || "User"
-          })`,
-          className: "text-indigo-400",
-        },
-      ]
-    : [
-        { to: "/login", text: "Login" },
-        { to: "/register", text: "Register" },
-      ];
-
   return (
     <nav className={`${styles.navbar} p-4`}>
       <div className="max-w-7xl mx-auto flex justify-between items-center">
+        
+        {/* Left Side: Logo */}
         <Link to="/" className={`${styles.logo} text-xl font-semibold`}>
           Blogging
         </Link>
-        <button className="md:hidden" onClick={() => setMenuOpen(!menuOpen)}>
-          {menuOpen ? <X size={32} /> : <Menu size={32} />}
-        </button>
-        <div className="hidden md:flex items-center space-x-6">
+
+        {/* Center: Navigation Links (Hidden on Mobile) */}
+        <div className="hidden md:flex space-x-6">
           {menuItems.map((item) => (
             <NavLink key={item} to={`/${item.toLowerCase()}`} text={item} />
           ))}
-          {authButtons.map(({ to, text, className }) => (
-            <NavLink key={text} to={to} text={text} className={className} />
-          ))}
-          <Button
-            onClick={() => navigate(user ? "/blogs" : "/login")}
-            text="Get Started"
-            color="white"
-          />
         </div>
+
+        {/* Right Side: Auth Buttons & Get Started Button */}
+        <div className="hidden md:flex items-center space-x-4">
+          <AuthButtons user={user} />
+          <button
+            onClick={() => navigate(user ? "/blogs" : "/login")}
+            className="px-6 py-3 font-medium text-white bg-black rounded-full transition-all duration-300 border border-transparent hover:bg-white hover:text-black hover:border-black hover:shadow-lg"
+          >
+            Get Started
+          </button>
+        </div>
+
+        {/* Mobile Menu Toggle Button */}
+        <button className="md:hidden" onClick={() => setMenuOpen(!menuOpen)}>
+          {menuOpen ? <X size={32} /> : <Menu size={32} />}
+        </button>
       </div>
 
-      {menuOpen && (
-        <div
-          className={styles.overlay}
-          onClick={() => setMenuOpen(false)}
-        ></div>
-      )}
-      <div className={`${styles.mobileMenu} ${menuOpen ? styles.open : ""}`}>
-        <button
-          className={styles.closeButton}
-          onClick={() => setMenuOpen(false)}
-        >
-          <X size={32} />
-        </button>
-        {menuItems.map((item) => (
-          <NavLink
-            key={item}
-            to={`/${item.toLowerCase()}`}
-            text={item}
-            onClick={() => setMenuOpen(false)}
-          />
-        ))}
-        {authButtons.map(({ to, text, className }) => (
-          <NavLink
-            key={text}
-            to={to}
-            text={text}
-            className={className}
-            onClick={() => setMenuOpen(false)}
-          />
-        ))}
-        <Button
-          onClick={() => {
-            setMenuOpen(false);
-            navigate(user ? "/blogs" : "/login");
-          }}
-          text="Get Started"
-          color="white"
-        />
-      </div>
+      {/* Mobile Menu Component */}
+      <MobileMenu
+        menuOpen={menuOpen}
+        setMenuOpen={setMenuOpen}
+        menuItems={menuItems}
+        user={user}
+        navigate={navigate}
+      />
     </nav>
   );
 };

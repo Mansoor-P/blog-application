@@ -9,9 +9,12 @@ export const blogReducer = (state, action) => {
     case "FETCH_INIT":
       return { ...state, loading: true, error: null };
     case "FETCH_SUCCESS":
-      return { ...state, loading: false, blogs: action.payload, error: null };
-    case "FETCH_EMPTY":
-      return { ...state, loading: false, blogs: [], error: null };
+      return {
+        ...state,
+        loading: false,
+        blogs: action.payload || [],
+        error: null,
+      };
     case "FETCH_ERROR":
       return { ...state, loading: false, error: action.payload };
     default:

@@ -2,7 +2,7 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import MainLayout from "../Layout/MainLayout";
 import Home from "../pages/Home";
-import BlogList from "../pages/BlogList ";
+import BlogList from "../pages/BlogList";
 import BlogDetail from "../pages/BlogDetail";
 import AboutPage from "../pages/About/AboutPage";
 import Login from "../pages/Login";
@@ -20,7 +20,7 @@ import Contact from "../pages/Contact";
 import Terms from "../pages/legal/Terms";
 import Privacy from "../pages/legal/Privacy";
 import Help from "../pages/legal/Help";
-
+import UnderDevelopment from "../components/UnderDevelopment";
 const AppRoutes = () => {
   return (
     <Routes>
@@ -83,10 +83,10 @@ const AppRoutes = () => {
         />
 
         <Route path="/contact" element={<Contact />} />
-        <Route path="/terms" element={<Terms />} />
-        <Route path="/privacy" element={<Privacy />} />
+        <Route path="/terms-conditions" element={<Terms />} />
+        <Route path="/privacy-policy" element={<Privacy />} />
         <Route path="/help" element={<Help />} />
-
+        <Route path="/coming-soon" element={<UnderDevelopment />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>

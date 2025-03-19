@@ -88,13 +88,30 @@ export const fetchUserBlogs = async (authorId) => {
   }
 };
 
-
 // Ensure this function exists in blogService.js
+// export const fetchBlogsByUser = async (username) => {
+//   try {
+//     const response = await api.get(`/user/${username}/my-blogs`); // ✅ Ensure correct endpoint
+//     return response.data;
+//   } catch (error) {
+//     handleApiError(error, "Error fetching blogs by user");
+//   }
+// };
+
 export const fetchBlogsByUser = async (username) => {
   try {
-    const response = await api.get(`/user/${username}/my-blogs`); // ✅ Ensure correct endpoint
-    return response.data;
+    const response = await fetch(
+      `${process.env.REACT_APP_API_URL}/blogs/user/${username}`
+    );
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch blogs: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data;
   } catch (error) {
-    handleApiError(error, "Error fetching blogs by user");
+    console.error("Error fetching user blogs:", error);
+    throw error;
   }
 };

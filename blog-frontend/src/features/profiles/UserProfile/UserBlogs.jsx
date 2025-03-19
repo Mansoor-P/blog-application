@@ -14,14 +14,25 @@ const UserBlogs = () => {
   useEffect(() => {
     const getUserBlogs = async () => {
       try {
+        setLoading(true);
+        setError(null);
+
         const data = await fetchBlogsByUser(username);
+        console.log("Fetched blogs:", data); // Debugging
+
+        if (!Array.isArray(data)) {
+          throw new Error("Invalid data format received.");
+        }
+
         setBlogs(data);
       } catch (err) {
-        setError(err.message);
+        console.error("Error fetching user blogs:", err);
+        setError(err.message || "Failed to fetch blogs.");
       } finally {
         setLoading(false);
       }
     };
+
     getUserBlogs();
   }, [username]);
 

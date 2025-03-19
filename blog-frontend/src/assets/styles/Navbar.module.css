@@ -1,17 +1,20 @@
 @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&display=swap");
 
-/* Global Navbar Styles */
+/* Glassmorphism Navbar */
 .navbar {
-  background-color: #dfe2a12d;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
   color: black;
   padding: 1rem 2rem;
   position: sticky;
   top: 0;
   width: 100%;
   z-index: 1000;
+  border-radius: 12px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.05);
 }
 
-/* Logo styling */
+/*  Logo Styling */
 .logo {
   font-family: "Playfair Display", serif;
   font-size: 2rem;
@@ -21,19 +24,60 @@
 
 .logo:hover {
   transform: scale(1.12);
+  color: #63f18e;
 }
 
-/* Mobile Menu */
+/*  Overlay Effect */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+/*  Navbar Hover Effects */
+.navbar a {
+  position: relative;
+  text-decoration: none;
+  color: black;
+  font-weight: 500;
+  transition: all 0.3s ease-in-out;
+}
+
+.navbar a:hover {
+  color: #0c0c0c;
+}
+
+.navbar a::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -3px;
+  width: 0;
+  height: 2px;
+  background-color: #1e8e25c3;
+  transition: width 0.3s ease-in-out, left 0.3s ease-in-out;
+}
+
+.navbar a:hover::after {
+  width: 100%;
+  left: 0;
+}
+
+/*  Mobile Menu */
 .mobileMenu {
   position: fixed;
   top: 0;
   left: 0;
   width: 60%;
-  height: 100vh; 
-  background-color: #ffffff;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.053);
-  transition: transform 0.3s ease-in-out;
-  transform: translateX(-100%); 
+  height: 100vh;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(12px);
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  transform: translateX(-100%);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -41,7 +85,7 @@
   z-index: 1001;
   font-size: 30px;
   text-align: left;
-
+  transition: transform 0.3s ease-in-out;
 }
 
 .mobileMenu.open {
@@ -58,13 +102,3 @@
   background: rgba(0, 0, 0, 0.5);
   z-index: 1000;
 }
-
-/* Close Button */
-.closeButton {
-  position: absolute;
-  top: 1rem;
-  right: 1.5rem;
-  font-size: 1.5rem;
-  cursor: pointer;
-}
-
