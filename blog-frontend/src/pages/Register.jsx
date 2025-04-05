@@ -13,7 +13,7 @@ const schema = z.object({
   displayName: z.string().optional(),
   bio: z.string().max(150, "Bio should not exceed 150 characters").optional(),
   profilePictureUrl: z.string().url("Invalid URL").optional(),
-  socialLinks: z.record(z.string().url()).optional(), // Change from string to an object
+  socialLinks: z.string().optional(), // Accepts comma-separated string
   role: z.enum(["USER", "ADMIN"]).default("USER"),
 });
 
@@ -25,28 +25,24 @@ const Register = () => {
     handleSubmit,
     formState: { errors },
   } = useForm({ resolver: zodResolver(schema) });
-
   const onSubmit = async (data) => {
     try {
       setLoading(true);
 
-      // Parse socialLinks field from string to object
+      // Convert comma-separated social links string into a properly formatted single string
       if (data.socialLinks) {
-        try {
-          data.socialLinks = JSON.parse(data.socialLinks);
-        } catch (error) {
-          console.error("Invalid JSON format for socialLinks");
-          alert("Please enter valid JSON format for social links.");
-          setLoading(false);
-          return;
-        }
+        data.socialLinks = data.socialLinks
+          .split(",") // Split by commas
+          .map((link) => link.trim()) // Trim spaces
+          .filter((link) => link !== "") // Remove empty values
+          .join(","); // Convert array back to a comma-separated string
       }
 
       await registerUser(data);
       alert("Registration Successful!");
       navigate("/login");
     } catch (error) {
-      alert(error.message);
+      alert(`Registration Error: ${error.message}`);
     } finally {
       setLoading(false);
     }
@@ -92,21 +88,27 @@ const Register = () => {
             placeholder="Display Name (Optional)"
             className="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300"
           />
+
           <textarea
             {...register("bio")}
             placeholder="Short Bio (Optional)"
             className="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300"
           />
+
           <input
             {...register("profilePictureUrl")}
             placeholder="Profile Picture URL (Optional)"
             className="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300"
           />
+
           <input
             {...register("socialLinks")}
-            placeholder="Social Links (Optional)"
+            placeholder="Social Links (comma-separated)"
             className="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300"
           />
+          {errors.socialLinks && (
+            <p className="text-red-500 text-sm">{errors.socialLinks.message}</p>
+          )}
 
           {/* Role Selection */}
           <select
@@ -125,6 +127,7 @@ const Register = () => {
             {loading ? "Registering..." : "Register"}
           </button>
         </form>
+
         <p className="mt-4 text-center">
           Already have an account?{" "}
           <a href="/login" className="text-blue-500">
